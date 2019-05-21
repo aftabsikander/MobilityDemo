@@ -1,0 +1,13 @@
+*.iml
+.gradle
+/.idea/caches
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+/.idea/caches/*
+/.idea/misc.xml
+.idea/
