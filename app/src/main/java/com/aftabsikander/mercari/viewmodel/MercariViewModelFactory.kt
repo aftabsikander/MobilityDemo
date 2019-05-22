@@ -14,7 +14,7 @@ constructor(viewModelSubComponent: ViewModelSubComponent) : ViewModelProvider.Fa
     private val creators: ArrayMap<Class<*>, Callable<out ViewModel>> = ArrayMap()
 
     init {
-      //todo implement ViewModel initialization
+        //todo implement ViewModel initialization
     }
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

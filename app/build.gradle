@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -154,14 +155,15 @@ final compileDep = [
         lifeCycleCompile    : "android.arch.lifecycle:compiler:${rootProject.ext.archVersion}",
         daggerprocessCompile: "com.google.dagger:dagger-android-processor:${rootProject.ext.daggerVersion}",
         daggerCompile       : "com.google.dagger:dagger-compiler:${rootProject.ext.daggerVersion}",
-        glideCompile:"com.github.bumptech.glide:compiler:4.8.0"
+        glideCompile        : "com.github.bumptech.glide:compiler:4.8.0"
 ]
 
 final extras = [
         ankoCommon: "org.jetbrains.anko:anko-commons:${rootProject.ext.ankoVersion}",
         anko      : "org.jetbrains.anko:anko:${rootProject.ext.ankoVersion}",
         gson      : "com.google.code.gson:gson:${rootProject.ext.gsonVersion}",
-        timber    : "com.jakewharton.timber:timber:${rootProject.ext.timberVersion}"
+        timber    : "com.jakewharton.timber:timber:${rootProject.ext.timberVersion}",
+        monarchy  : "com.github.Zhuinden:realm-monarchy:0.5.1",
 ]
 
 dependencies {

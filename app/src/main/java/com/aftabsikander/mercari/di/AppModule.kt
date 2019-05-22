@@ -7,7 +7,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 
-@Module(subcomponents = [(ViewModelSubComponent::class)], includes = [NetworkModule::class])
+@Module(subcomponents = [(ViewModelSubComponent::class)], includes = [NetworkModule::class, DatabaseModule::class])
 internal class AppModule {
 
     @Singleton
