@@ -1,7 +1,7 @@
 package com.aftabsikander.mercari.di
 
 import androidx.lifecycle.ViewModelProvider
-import com.aftabsikander.mercari.viewmodel.MercariViewModelFactory
+import com.aftabsikander.mercari.viewmodel.base.MercariViewModelFactory
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

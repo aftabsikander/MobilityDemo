@@ -15,7 +15,8 @@ open class CategoryModel(
 open class DisplayItem(
     @PrimaryKey
     @SerializedName("id")
-    open val id: String="",
+    open val id: String = "",
+    open var categoryID: String = "",
     @SerializedName("status")
     open val status: String,
     @SerializedName("name")

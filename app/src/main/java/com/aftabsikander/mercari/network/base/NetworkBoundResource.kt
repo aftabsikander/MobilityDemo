@@ -1,4 +1,4 @@
-package com.aftabsikander.mercari.network
+package com.aftabsikander.mercari.network.base
 
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.aftabsikander.mercari.MercariApp
 import com.aftabsikander.mercari.R
-import com.aftabsikander.mercari.network.base.Resource
 import com.google.gson.stream.MalformedJsonException
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -31,7 +30,7 @@ protected constructor() {
         result.value = Resource.loading(true)
 
         // Always load the data from DB initially so that we have
-        val dbSource = loadFromDb()
+        val dbSource = this.loadFromDb()
 
         // Fetch the data from network and add it to the resource
         result.addSource(dbSource) {
@@ -56,7 +55,7 @@ protected constructor() {
         result.addSource(dbSource) {
             result.setValue(Resource.loading(true))
         }
-        createCall().enqueue(object : Callback<V> {
+        createCall()?.enqueue(object : Callback<V> {
             override fun onResponse(call: Call<V>, response: Response<V>) {
                 result.removeSource(dbSource)
                 saveResultAndReInit(response.body())
@@ -110,6 +109,8 @@ protected constructor() {
     @MainThread
     protected abstract fun loadFromDb(): LiveData<T>
 
+
+
     @MainThread
-    protected abstract fun createCall(): Call<V>
+    protected abstract fun createCall(): Call<V>?
 }

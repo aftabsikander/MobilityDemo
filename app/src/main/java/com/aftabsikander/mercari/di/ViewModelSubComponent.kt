@@ -1,5 +1,6 @@
 package com.aftabsikander.mercari.di
 
+import com.aftabsikander.mercari.viewmodel.CategoryListViewModel
 import dagger.Subcomponent
 
 /**
@@ -12,5 +13,8 @@ interface ViewModelSubComponent {
     interface Builder {
         fun build(): ViewModelSubComponent
     }
+
+
+    fun categoryListViewModel(): CategoryListViewModel
 
 }

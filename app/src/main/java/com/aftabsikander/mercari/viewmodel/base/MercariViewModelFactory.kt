@@ -1,9 +1,10 @@
-package com.aftabsikander.mercari.viewmodel
+package com.aftabsikander.mercari.viewmodel.base
 
 import androidx.collection.ArrayMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.aftabsikander.mercari.di.ViewModelSubComponent
+import com.aftabsikander.mercari.viewmodel.CategoryListViewModel
 import java.util.concurrent.Callable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,7 +15,11 @@ constructor(viewModelSubComponent: ViewModelSubComponent) : ViewModelProvider.Fa
     private val creators: ArrayMap<Class<*>, Callable<out ViewModel>> = ArrayMap()
 
     init {
-        //todo implement ViewModel initialization
+        // View models cannot be injected directly because they won't be bound to the owner's view model scope.
+        creators[CategoryListViewModel::class.java] =
+            Callable<ViewModel> { viewModelSubComponent.categoryListViewModel() }
+
+
     }
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
