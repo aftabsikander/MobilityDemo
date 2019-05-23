@@ -1,6 +1,5 @@
 package com.aftabsikander.mercari.network.base
 
-
 /**
  * Base Pojo class which will hold all states of the Responses.
  */
@@ -11,10 +10,8 @@ class Resource<T> private constructor(
     val loading: Boolean = false
 ) {
 
-    enum class Status { SUCCESS, ERROR, LOADING, OFFLINE, HOST_ERROR }
-
     companion object {
-        fun <T> success(data: T): Resource<T?>? {
+        fun <T> success(data: T): Resource<T> {
             return Resource(Status.SUCCESS, data)
         }
 

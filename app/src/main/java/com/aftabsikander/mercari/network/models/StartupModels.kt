@@ -1,33 +1,37 @@
 package com.aftabsikander.mercari.network.models
 
 import com.google.gson.annotations.SerializedName
+import io.realm.RealmModel
+import io.realm.annotations.PrimaryKey
 
-data class CategoryModel(
+open class CategoryModel(
+    @PrimaryKey
     @SerializedName("name")
-    val name: String,
+    open val name: String = "",
     @SerializedName("data")
-    val dataURL: String
-)
+    open val dataURL: String = ""
+) : RealmModel
 
-data class DisplayItem(
-    @SerializedName("status")
-    val status: String,
+open class DisplayItem(
+    @PrimaryKey
     @SerializedName("id")
-    val id: String,
+    open val id: String = "",
+    open var categoryID: String = "",
+    @SerializedName("status")
+    open val status: String,
     @SerializedName("name")
-    val name: String,
+    open val name: String,
     @SerializedName("num_likes")
-    val likeCount: Long,
+    open val likeCount: Long,
     @SerializedName("num_comments")
-    val commentCounts: Long,
+    open val commentCounts: Long,
     @SerializedName("price")
-    val amount: Double,
+    open val amount: Double,
     @SerializedName("photo")
-    val imgURL: Double
-)
+    open val imgURL: Double
+) : RealmModel
 
-
-data class StartupResponse(val catTabs: ArrayList<CategoryModel>)
+class StartupResponse(val catTabs: ArrayList<CategoryModel>)
 data class CategoryResponse(val catDataCol: ArrayList<DisplayItem>)
 
 
