@@ -2,12 +2,13 @@ package com.aftabsikander.mercari.network.models
 
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmObject
-import java.util.*
+import io.realm.annotations.PrimaryKey
 
 open class DisplayItem(
-    open var catID: String = UUID.randomUUID().toString(),
+    @PrimaryKey
+    open var uniqueID: String? = null,
     @SerializedName("id")
-    open var idFromServer: String = "",
+    open var id: String = "",
     open var categoryName: String = "",
     @SerializedName("status")
     open var status: String = "",
@@ -21,9 +22,14 @@ open class DisplayItem(
     open var amount: Double = 0.0,
     @SerializedName("photo")
     open var imgURL: String = ""
+
 ) : RealmObject() {
 
     fun displayAmount(): String {
         return "$ ${this.amount}"
+    }
+
+    fun generateUniqueID() {
+        uniqueID = "${this.id.toLowerCase()}-${this.categoryName.toLowerCase()}"
     }
 }

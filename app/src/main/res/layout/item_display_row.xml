@@ -11,6 +11,8 @@
             android:layout_width="match_parent"
             android:layout_margin="@dimen/spacing_small"
             android:layout_height="wrap_content"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true"
             app:cardElevation="@dimen/card_elevation">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -67,14 +69,15 @@
 
 
             <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:id="@+id/tvLikesCount"
                     app:layout_constraintTop_toBottomOf="@id/imgDisplay"
                     app:layout_constraintLeft_toRightOf="@+id/imgFav"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_margin="@dimen/spacing_6dp"
+                    android:layout_marginTop="@dimen/spacing_6dp"
+                    android:layout_marginEnd="@dimen/spacing_small"
+                    android:layout_marginBottom="@dimen/spacing_6dp"
                     android:maxLines="1"
-                    android:maxWidth="@dimen/max_width_for_count"
                     android:ellipsize="end"
                     android:textSize="@dimen/text_size_medium"
                     android:text="@{String.valueOf(displayItem.likeCount)}"
@@ -93,14 +96,15 @@
 
 
             <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:id="@+id/tvCommentCount"
                     app:layout_constraintTop_toBottomOf="@id/imgDisplay"
                     app:layout_constraintLeft_toRightOf="@+id/imgComment"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_margin="@dimen/spacing_6dp"
+                    android:layout_marginTop="@dimen/spacing_6dp"
+                    android:layout_marginEnd="@dimen/spacing_small"
+                    android:layout_marginBottom="@dimen/spacing_6dp"
                     android:maxLines="1"
-                    android:maxWidth="@dimen/max_width_for_count"
                     android:ellipsize="end"
                     android:textSize="@dimen/text_size_medium"
                     android:text="@{String.valueOf(displayItem.commentCounts)}"
@@ -108,18 +112,11 @@
                     android:layout_height="wrap_content"/>
 
 
-            <androidx.constraintlayout.widget.Barrier
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/barrier_amount"
-                    app:barrierDirection="end"
-                    app:constraint_referenced_ids="imgFav,imgComment,tvLikesCount,tvCommentCount"/>
-
             <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="0dp"
                     android:id="@+id/tvPrice"
                     app:layout_constraintTop_toBottomOf="@id/imgDisplay"
-                    app:layout_constraintLeft_toRightOf="@id/barrier_amount"
+                    app:layout_constraintLeft_toRightOf="@id/tvCommentCount"
                     android:layout_margin="@dimen/spacing_6dp"
                     android:textSize="@dimen/text_size_medium"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -129,7 +126,6 @@
                     android:layout_height="wrap_content"
                     android:text="@{displayItem.displayAmount()}"
                     android:maxLines="1"
-                    app:layout_constraintStart_toEndOf="@+id/barrier_amount"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
 

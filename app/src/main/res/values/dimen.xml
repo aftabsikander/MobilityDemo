@@ -94,13 +94,13 @@
     <dimen name="sold_out_strip_width">130dp</dimen>
     <dimen name="sold_out_strip_height">80dp</dimen>
 
-    <dimen name="display_like_image_width">34dp</dimen>
-    <dimen name="display_like_image_height">34dp</dimen>
+    <dimen name="display_like_image_width">24dp</dimen>
+    <dimen name="display_like_image_height">24dp</dimen>
 
-    <dimen name="display_comment_image_width">34dp</dimen>
-    <dimen name="display_comment_image_height">34dp</dimen>
+    <dimen name="display_comment_image_width">24dp</dimen>
+    <dimen name="display_comment_image_height">24dp</dimen>
 
-    <dimen name="max_width_for_count">80dp</dimen>
+    <dimen name="max_width_for_count">100dp</dimen>
 
 
 </resources>

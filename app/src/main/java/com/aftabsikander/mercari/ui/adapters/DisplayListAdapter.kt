@@ -30,7 +30,7 @@ class DisplayListAdapter(
     companion object {
         val displayItemDiffCallback = object : DiffUtil.ItemCallback<DisplayItem>() {
             override fun areItemsTheSame(oldItem: DisplayItem, newItem: DisplayItem): Boolean {
-                return oldItem.catID == newItem.catID
+                return oldItem.uniqueID == newItem.uniqueID
             }
 
             override fun areContentsTheSame(oldItem: DisplayItem, newItem: DisplayItem): Boolean {

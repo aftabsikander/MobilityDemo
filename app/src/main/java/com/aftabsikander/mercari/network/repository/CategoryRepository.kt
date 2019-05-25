@@ -59,6 +59,8 @@ constructor(private val service: MercariService, var monarchy: Monarchy) {
                     if (item != null) {
                         item.forEach {
                             it.categoryName = categoryID
+                            //this is important for generating unique PrimaryKey
+                            it.generateUniqueID()
                         }
                         realm.insertOrUpdate(item)
                     }
@@ -86,7 +88,7 @@ constructor(private val service: MercariService, var monarchy: Monarchy) {
                     DataSource.Factory<Int, DisplayItem> {
                 return realmDataSource.map { input ->
                     DisplayItem(
-                        input.catID, input.idFromServer, input.categoryName, input.status, input.name, input.likeCount,
+                        input.uniqueID, input.id, input.categoryName, input.status, input.name, input.likeCount,
                         input.commentCounts, input.amount, input.imgURL
                     )
                 }

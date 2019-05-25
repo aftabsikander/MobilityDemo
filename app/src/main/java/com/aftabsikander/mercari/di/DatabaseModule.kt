@@ -34,6 +34,7 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun monarchy(config: RealmConfiguration): Monarchy {
+        Realm.setDefaultConfiguration(config)
         return Monarchy.Builder()
             .setRealmConfiguration(config)
             .build()

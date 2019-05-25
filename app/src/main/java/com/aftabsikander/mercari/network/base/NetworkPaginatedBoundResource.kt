@@ -40,7 +40,6 @@ protected constructor() {
 
 
     fun setupPagination(): LiveData<PagedList<T>> {
-        //dataSourceLive = this.loadFromDb()
         //Create and store realm source factor for data mapping
         realmSourceFactor = this.createRealmDataSource()
         dataSourceFactoryForPagingComponent = this.createDataSourceMapping(realmSourceFactor)
@@ -56,7 +55,7 @@ protected constructor() {
 
     init {
         monarchy = this.provideMonarchyInstance()
-        result.value = Resource.loading(true)
+        //result.value = Resource.loading(true)
         dataSourceLive = this.loadFromDb()
     }
 
@@ -68,18 +67,18 @@ protected constructor() {
      * @param [dbSource] - Database source
      */
     private fun fetchFromNetwork(dbSource: LiveData<T>) {
-        result.addSource(dbSource) {
+       /* result.addSource(dbSource) {
             result.setValue(Resource.loading(true))
-        }
+        }*/
         createCall()?.enqueue(object : Callback<V> {
             override fun onResponse(call: Call<V>, response: Response<V>) {
-                result.removeSource(dbSource)
+                //result.removeSource(dbSource)
                 saveResultAndReInit(response.body())
             }
 
             override fun onFailure(call: Call<V>, t: Throwable) {
                 Timber.d(t)
-                result.removeSource(dbSource)
+                /*result.removeSource(dbSource)
                 result.addSource(dbSource) { newData ->
                     result.setValue(
                         Resource.error(
@@ -87,7 +86,7 @@ protected constructor() {
                             newData
                         )
                     )
-                }
+                }*/
             }
         })
     }
@@ -107,10 +106,10 @@ protected constructor() {
         doAsync {
             saveCallResult(response)
             uiThread {
-                result.addSource(loadFromDb()) { newData ->
+                /*result.addSource(loadFromDb()) { newData ->
                     if (null != newData)
                         result.value = Resource.success(newData)
-                }
+                }*/
             }
         }
     }
@@ -168,7 +167,8 @@ protected constructor() {
          * When all items in the database were loaded, we need to query the backend for more items.
          */
         override fun onItemAtEndLoaded(itemAtEnd: T) {
-            //TODO will be implemented later when pagination API is available.
+            //TODO will be implemented later when pagination API is available. For now calling same API
+            networkBoundResource.fetchFromNetwork(networkBoundResource.dataSourceLive)
         }
 
     }
