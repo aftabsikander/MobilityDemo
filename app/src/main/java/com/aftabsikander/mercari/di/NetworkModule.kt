@@ -3,7 +3,7 @@ package com.aftabsikander.mercari.di
 import com.aftabsikander.mercari.network.RequestInterceptor
 import com.aftabsikander.mercari.network.WebLinks
 import com.aftabsikander.mercari.network.services.MercariService
-import com.aftabsikander.mercari.utilities.AppConstants
+import com.aftabsikander.mercari.utilities.constants.AppConstants
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.internal.bind.DateTypeAdapter

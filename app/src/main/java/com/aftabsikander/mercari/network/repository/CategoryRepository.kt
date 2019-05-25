@@ -9,11 +9,9 @@ import com.aftabsikander.mercari.network.base.NetworkBoundResource
 import com.aftabsikander.mercari.network.base.NetworkPaginatedBoundResource
 import com.aftabsikander.mercari.network.base.Resource
 import com.aftabsikander.mercari.network.models.CategoryModel
-import com.aftabsikander.mercari.network.models.CategoryResponse
 import com.aftabsikander.mercari.network.models.DisplayItem
-import com.aftabsikander.mercari.network.models.StartupResponse
 import com.aftabsikander.mercari.network.services.MercariService
-import com.aftabsikander.mercari.utilities.AppConstants
+import com.aftabsikander.mercari.utilities.constants.AppConstants
 import com.zhuinden.monarchy.Monarchy
 import io.realm.Case
 import io.realm.Realm
@@ -24,18 +22,20 @@ import javax.inject.Singleton
 
 @Singleton
 class CategoryRepository @Inject
-constructor(private val service: MercariService, private val realm: Realm, var monarchy: Monarchy) {
+constructor(private val service: MercariService, var monarchy: Monarchy) {
 
     private val liveDataCallbackForResource = MediatorLiveData<DisplayItem>()
 
     fun loadCategories(): LiveData<Resource<List<CategoryModel>>> {
-        return object : NetworkBoundResource<List<CategoryModel>, StartupResponse>() {
-            override fun saveCallResult(item: StartupResponse?) {
+        return object : NetworkBoundResource<List<CategoryModel>, ArrayList<CategoryModel>>() {
+            override fun saveCallResult(item: ArrayList<CategoryModel>?) {
+                val realm = Realm.getDefaultInstance()
                 realm.executeTransaction {
-                    if (item != null) {
-                        it.insertOrUpdate(item.catTabs)
+                    if (!item.isNullOrEmpty()) {
+                        it.insertOrUpdate(item)
                     }
                 }
+                realm.close()
             }
 
             @NonNull
@@ -44,7 +44,7 @@ constructor(private val service: MercariService, private val realm: Realm, var m
             }
 
             @NonNull
-            override fun createCall(): Call<StartupResponse> {
+            override fun createCall(): Call<ArrayList<CategoryModel>> {
                 return service.getStartupData()
             }
         }.asLiveData
@@ -52,16 +52,18 @@ constructor(private val service: MercariService, private val realm: Realm, var m
 
 
     fun loadCategoryData(categoryID: String): LiveData<PagedList<DisplayItem>> {
-        return object : NetworkPaginatedBoundResource<DisplayItem, CategoryResponse>() {
-            override fun saveCallResult(item: CategoryResponse?) {
-                realm.executeTransaction { realm ->
+        return object : NetworkPaginatedBoundResource<DisplayItem, ArrayList<DisplayItem>>() {
+            override fun saveCallResult(item: ArrayList<DisplayItem>?) {
+                val realmInstance = Realm.getDefaultInstance()
+                realmInstance.executeTransaction { realm ->
                     if (item != null) {
-                        item.catDataCol.forEach {
-                            it.categoryID = categoryID
+                        item.forEach {
+                            it.categoryName = categoryID
                         }
-                        realm.insertOrUpdate(item.catDataCol)
+                        realm.insertOrUpdate(item)
                     }
                 }
+                realmInstance.close()
             }
 
             override fun loadFromDb(): LiveData<DisplayItem> {
@@ -75,7 +77,7 @@ constructor(private val service: MercariService, private val realm: Realm, var m
             override fun createRealmDataSource(): Monarchy.RealmDataSourceFactory<DisplayItem> {
                 return monarchy.createDataSourceFactory { realm ->
                     realm.where(DisplayItem::class.java).equalTo(
-                        "categoryID", categoryID, Case.INSENSITIVE
+                        "categoryName", categoryID, Case.INSENSITIVE
                     )
                 } as Monarchy.RealmDataSourceFactory<DisplayItem>
             }
@@ -84,13 +86,13 @@ constructor(private val service: MercariService, private val realm: Realm, var m
                     DataSource.Factory<Int, DisplayItem> {
                 return realmDataSource.map { input ->
                     DisplayItem(
-                        input.id, input.categoryID, input.status, input.name, input.likeCount,
+                        input.id, input.categoryName, input.status, input.name, input.likeCount,
                         input.commentCounts, input.amount, input.imgURL
                     )
                 }
             }
 
-            override fun createCall(): Call<CategoryResponse>? {
+            override fun createCall(): Call<ArrayList<DisplayItem>>? {
                 return generateCategoryDataEndPoint(categoryID)
             }
 
@@ -114,14 +116,16 @@ constructor(private val service: MercariService, private val realm: Realm, var m
         return liveDataCallbackForResource
     }
 
-    private fun generateCategoryDataEndPoint(categoryID: String): Call<CategoryResponse> {
+    private fun generateCategoryDataEndPoint(categoryID: String): Call<ArrayList<DisplayItem>> {
         var categoryURL = ""
-        realm.executeTransaction {
+        val realmInstance = Realm.getDefaultInstance()
+        realmInstance.executeTransaction {
             val category = it.where(CategoryModel::class.java)
                 .equalTo("name", categoryID, Case.INSENSITIVE)
                 .findFirst()
             categoryURL = category?.dataURL ?: ""
         }
+        realmInstance.close()
         return service.getCategoryData(categoryURL)
     }
 

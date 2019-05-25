@@ -18,6 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
+import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
 
@@ -39,7 +40,7 @@ protected constructor() {
 
 
     fun setupPagination(): LiveData<PagedList<T>> {
-        dataSourceLive = this.loadFromDb()
+        //dataSourceLive = this.loadFromDb()
         //Create and store realm source factor for data mapping
         realmSourceFactor = this.createRealmDataSource()
         dataSourceFactoryForPagingComponent = this.createDataSourceMapping(realmSourceFactor)
@@ -59,7 +60,7 @@ protected constructor() {
         // Always load the data from DB initially so that we have
         dataSourceLive = this.loadFromDb()
         // Fetch the data from network and add it to the resource
-        result.addSource(dataSourceLive) {
+        /*result.addSource(dataSourceLive) {
             result.removeSource(dataSourceLive)
             if (shouldFetch()) {
                 fetchFromNetwork(dataSourceLive)
@@ -69,7 +70,7 @@ protected constructor() {
                         result.value = Resource.success(newData)
                 }
             }
-        }
+        }*/
     }
 
 
@@ -90,6 +91,7 @@ protected constructor() {
             }
 
             override fun onFailure(call: Call<V>, t: Throwable) {
+                Timber.d(t)
                 result.removeSource(dbSource)
                 result.addSource(dbSource) { newData ->
                     result.setValue(

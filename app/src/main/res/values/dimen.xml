@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+
+    <!-- Margins & Padding -->
+    <dimen name="margin_padding_size_small">8dp</dimen>
+    <dimen name="margin_padding_size_medium">16dp</dimen>
+    <dimen name="margin_padding_size_large">32dp</dimen>
+
+    <!-- Icon sizes -->
+    <dimen name="standard_icon_size">32dp</dimen>
+    <dimen name="launcher_icon_size">48dp</dimen>
+
+    <!-- Touch Target Size-->
+    <dimen name="standard_touch_size">48dp</dimen>
+
+    <!-- Toolbar, 4 dp baseline -->
+    <dimen name="toolbar_margin_size">4dp</dimen>
+    <dimen name="toolbar_icon_size">24dp</dimen>
+
+    <!-- Notification bar, 2 dp baseline -->
+    <dimen name="notification_margin_size">2dp</dimen>
+    <dimen name="notification_icon_size">22dp</dimen>
+
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="spacing_xsmall">2dp</dimen>
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_6dp">6dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_10dp">10dp</dimen>
+    <dimen name="spacing_12dp">12dp</dimen>
+    <dimen name="spacing_15dp">15dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_18dp">18dp</dimen>
+    <dimen name="spacing_24dp">24dp</dimen>
+    <dimen name="spacing_xlarge">32dp</dimen>
+
+    <dimen name="margin_20dp">20dp</dimen>
+    <dimen name="margin_25dp">25dp</dimen>
+    <dimen name="margin_28dp">28dp</dimen>
+    <dimen name="margin_40dp">40dp</dimen>
+    <dimen name="margin_60dp">60dp</dimen>
+    <dimen name="margin_80dp">80dp</dimen>
+    <dimen name="margin_30dp">30dp</dimen>
+
+
+    <!-- body content -->
+    <dimen name="margin_10dp">10dp</dimen>
+    <dimen name="margin_12dp">12dp</dimen>
+    <dimen name="margin_14dp">14dp</dimen>
+
+    <dimen name="text_size_xsmall">11sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_xxsmall">10sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_20sp">20sp</dimen>
+    <dimen name="text_size_xlarge">22sp</dimen>
+    <dimen name="text_size_xxlarge">28sp</dimen>
+    <dimen name="text_size_huge_large">60sp</dimen>
+
+    <dimen name="card_padding_normal_10dp">10dp</dimen>
+    <dimen name="card_padding_normal_11dp">11.5dp</dimen>
+    <dimen name="card_padding_normal_12dp">12dp</dimen>
+    <dimen name="card_padding_normal_9dp">9dp</dimen>
+    <dimen name="card_padding_normal_8dp">8dp</dimen>
+    <dimen name="card_padding_normal_14dp">14dp</dimen>
+    <dimen name="card_padding_normal_16dp">16dp</dimen>
+    <dimen name="card_padding_normal_20dp">20dp</dimen>
+    <dimen name="card_padding_normal_24dp">24dp</dimen>
+
+
+    <dimen name="profile_avatar_width">20dp</dimen>
+    <dimen name="profile_avatar_height">20dp</dimen>
+
+    <dimen name="image_circle_width">80dp</dimen>
+    <dimen name="image_circle_height">80dp</dimen>
+
+    <dimen name="image_upload_icon_width">40dp</dimen>
+    <dimen name="image_upload_icon_height">40dp</dimen>
+
+
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_margin_left">-3dp</dimen>
+    <dimen name="card_margin">-6dp</dimen>
+    <dimen name="card_margin_bottom">-3dp</dimen>
+    <dimen name="card_corner_radius">4dp</dimen>
+
+    <dimen name="sold_out_strip_width">130dp</dimen>
+    <dimen name="sold_out_strip_height">80dp</dimen>
+
+    <dimen name="display_like_image_width">34dp</dimen>
+    <dimen name="display_like_image_height">34dp</dimen>
+
+    <dimen name="display_comment_image_width">34dp</dimen>
+    <dimen name="display_comment_image_height">34dp</dimen>
+
+    <dimen name="max_width_for_count">80dp</dimen>
+
+
+</resources>

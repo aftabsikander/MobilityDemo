@@ -19,10 +19,11 @@ class MercariApp : MultiDexApplication(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
+        context = this
         AppInjector.init(this)
         appComponent.inject(this)
         setupTimber()
-        context = this
+
     }
 
     override fun activityInjector(): DispatchingAndroidInjector<Activity>? {

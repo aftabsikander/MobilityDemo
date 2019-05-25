@@ -1,7 +1,7 @@
 package com.aftabsikander.mercari.di
 
 import android.app.Application
-import com.aftabsikander.mercari.utilities.DatabaseConstants
+import com.aftabsikander.mercari.utilities.constants.DatabaseConstants
 import com.zhuinden.monarchy.Monarchy
 import dagger.Module
 import dagger.Provides
@@ -14,7 +14,8 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideRealmConfiguration(): RealmConfiguration {
+    fun provideRealmConfiguration(application: Application): RealmConfiguration {
+        Realm.init(application)
         val builder = RealmConfiguration.Builder()
             .name(DatabaseConstants.NAME)
             .schemaVersion(DatabaseConstants.SCHEMA_VERSION)
@@ -25,15 +26,14 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    internal fun provideArticleDatabase(application: Application, config: RealmConfiguration): Realm {
-        Realm.init(application)
+    internal fun provideRealmDatabase(application: Application, config: RealmConfiguration): Realm {
         Realm.setDefaultConfiguration(config)
         return Realm.getDefaultInstance()
     }
 
     @Provides
     @Singleton
-    fun monarchy(config: RealmConfiguration): Monarchy {
+    fun monarchy(config: RealmConfiguration, realm: Realm): Monarchy {
         return Monarchy.Builder()
             .setRealmConfiguration(config)
             .build()

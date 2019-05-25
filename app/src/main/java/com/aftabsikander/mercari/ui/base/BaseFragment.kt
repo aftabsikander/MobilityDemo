@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.aftabsikander.mercari.di.Injectable
+import com.aftabsikander.mercari.utilities.extensions.setToolbarTitle
+import com.aftabsikander.mercari.utilities.extensions.showToolBar
 import javax.inject.Inject
 
 abstract class BaseFragment<V : ViewModel, D : ViewDataBinding> : Fragment(), Injectable {
@@ -30,12 +32,22 @@ abstract class BaseFragment<V : ViewModel, D : ViewDataBinding> : Fragment(), In
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModel())
+        //viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModel())
     }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dataBinding = DataBindingUtil.inflate(inflater, getLayoutRes(), container, false)
         return dataBinding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModel())
+    }
+
+    protected fun setToolbarText(title: String) {
+        showToolBar()
+        setToolbarTitle(title)
     }
 }
