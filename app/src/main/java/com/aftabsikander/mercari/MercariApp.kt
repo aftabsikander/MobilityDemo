@@ -4,8 +4,11 @@ import android.app.Activity
 import androidx.multidex.MultiDexApplication
 import com.aftabsikander.mercari.di.AppComponent
 import com.aftabsikander.mercari.di.AppInjector
+import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.core.CrashlyticsCore
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -23,6 +26,7 @@ class MercariApp : MultiDexApplication(), HasActivityInjector {
         AppInjector.init(this)
         appComponent.inject(this)
         setupTimber()
+        setupFabricForCrashlytics()
 
     }
 
@@ -42,6 +46,17 @@ class MercariApp : MultiDexApplication(), HasActivityInjector {
             Timber.plant(Timber.DebugTree())
         }
     }
+
+    //region Helper methods for Fabric crashlytics
+    private fun setupFabricForCrashlytics() {
+        // Set up Crashlytics, disabled for debug builds
+        val crashlyticsKit = Crashlytics.Builder()
+            .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+            .build()
+
+        Fabric.with(this, crashlyticsKit)
+    }
+    //endregion
 
 
 }

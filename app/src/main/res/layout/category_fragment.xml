@@ -64,14 +64,14 @@
                 android:id="@+id/fabSell"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorAccent"
                 android:layout_margin="@dimen/spacing_large"
+                android:visibility="gone"
+                android:layout_gravity="bottom|right"
+                app:backgroundTint="@color/colorAccent"
                 app:fabSize="normal"
                 app:elevation="@dimen/card_elevation"
-                android:visibility="gone"
-                android:src="@drawable/ic_camera_24px"
-                app:tint="@color/white"
-                android:layout_gravity="bottom|right"/>
+                app:srcCompat="@drawable/ic_camera_24px"
+                app:tint="@color/white"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
