@@ -48,7 +48,7 @@ fun Fragment.checkNetworkStatus(): Boolean {
 }
 
 
-fun Fragment.isWiFiEnabled(context: Context): Boolean {
+fun Fragment.isWiFiEnabled(): Boolean {
     val wifiManager =
         MercariApp.getInstance().applicationContext?.getSystemService(Context.WIFI_SERVICE) as WifiManager
     return wifiManager.isWifiEnabled

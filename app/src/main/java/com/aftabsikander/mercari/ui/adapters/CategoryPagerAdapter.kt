@@ -9,9 +9,7 @@ import com.aftabsikander.mercari.ui.fragments.CategoryDetailFragment
 
 class CategoryPagerAdapter(
     private var catColl: ArrayList<CategoryModel>,
-    context: Context,
-    fragmentManager: FragmentManager
-) :
+    fragmentManager: FragmentManager) :
     FragmentPagerAdapter(fragmentManager) {
 
     override fun getItem(position: Int): Fragment {

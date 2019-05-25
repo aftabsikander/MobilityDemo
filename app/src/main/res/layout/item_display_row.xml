@@ -23,12 +23,15 @@
 
 
             <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="fitXY"
                     android:id="@+id/imgDisplay"
+                    app:layout_constraintDimensionRatio="H,1:1"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/photo_holder"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/barrierImage"
                     app:layout_constraintStart_toStartOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -44,6 +47,13 @@
                     tools:visibility="visible"
                     app:srcCompat="@drawable/badge_soldout"
             />
+
+            <androidx.constraintlayout.widget.Barrier
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/barrierImage"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="imgStatus,imgDisplay"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/display_like_image_width"

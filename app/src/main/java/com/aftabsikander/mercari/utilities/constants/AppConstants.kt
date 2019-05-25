@@ -1,7 +1,7 @@
 package com.aftabsikander.mercari.utilities.constants
 
 object AppConstants {
-    const val WEB_CONNECTION_TIMEOUT = 60L // in minutes
+    const val WEB_CONNECTION_TIMEOUT = 5L // in 5 sec
     const val WEB_READ_TIMEOUT = 60L // in minutes
     const val WEB_FILE_READ_TIMEOUT = 120L // in minutes
     const val INITIAL_PAGE = 1

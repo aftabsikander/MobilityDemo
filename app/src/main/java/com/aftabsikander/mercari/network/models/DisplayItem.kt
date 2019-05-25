@@ -2,12 +2,12 @@ package com.aftabsikander.mercari.network.models
 
 import com.google.gson.annotations.SerializedName
 import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
+import java.util.*
 
 open class DisplayItem(
-    @PrimaryKey
+    open var catID: String = UUID.randomUUID().toString(),
     @SerializedName("id")
-    open var id: String = "",
+    open var idFromServer: String = "",
     open var categoryName: String = "",
     @SerializedName("status")
     open var status: String = "",

@@ -16,7 +16,6 @@ import com.aftabsikander.mercari.ui.adapters.DisplayListAdapter
 import com.aftabsikander.mercari.ui.base.BaseFragment
 import com.aftabsikander.mercari.ui.widget.ListSpacingDecoration
 import com.aftabsikander.mercari.utilities.constants.BundleConstants
-import com.aftabsikander.mercari.utilities.extensions.checkNetworkStatus
 import com.aftabsikander.mercari.viewmodel.CategoryDetailViewModel
 import timber.log.Timber
 
@@ -61,13 +60,9 @@ class CategoryDetailFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (checkNetworkStatus()) {
-            viewModel.performCategoryLoad(categoryID).observe(viewLifecycleOwner, Observer {
-                adapter.submitList(it)
-            })
-
-            //viewModel.getResourceCallBack().observe(viewLifecycleOwner, Observer {})
-        }
+        viewModel.performCategoryLoad(categoryID).observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

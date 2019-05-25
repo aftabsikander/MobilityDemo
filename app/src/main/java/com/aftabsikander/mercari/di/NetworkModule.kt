@@ -1,5 +1,6 @@
 package com.aftabsikander.mercari.di
 
+import android.app.Application
 import com.aftabsikander.mercari.network.RequestInterceptor
 import com.aftabsikander.mercari.network.WebLinks
 import com.aftabsikander.mercari.network.services.MercariService
@@ -9,6 +10,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.internal.bind.DateTypeAdapter
 import dagger.Module
 import dagger.Provides
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -33,8 +35,15 @@ class NetworkModule {
             .addInterceptor(RequestInterceptor())
             .addInterceptor(interceptor)
             .build()
-
     }
+
+    @Provides
+    @Singleton
+    fun providesOkHttpCache(application: Application): Cache {
+        val cacheSize = (5 * 1024 * 1024).toLong()
+        return Cache(application.cacheDir, cacheSize)
+    }
+
 
     @Singleton
     @Provides

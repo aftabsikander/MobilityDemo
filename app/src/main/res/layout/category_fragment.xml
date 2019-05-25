@@ -67,6 +67,7 @@
                 android:backgroundTint="@color/colorAccent"
                 android:layout_margin="@dimen/spacing_large"
                 app:fabSize="normal"
+                app:elevation="@dimen/card_elevation"
                 android:visibility="gone"
                 android:src="@drawable/ic_camera_24px"
                 app:tint="@color/white"

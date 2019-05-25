@@ -7,7 +7,10 @@ import dagger.Provides
 import javax.inject.Singleton
 
 
-@Module(subcomponents = [(ViewModelSubComponent::class)], includes = [NetworkModule::class, DatabaseModule::class])
+@Module(
+    subcomponents = [(ViewModelSubComponent::class)],
+    includes = [NetworkModule::class, DatabaseModule::class, ImageLoadingModule::class]
+)
 internal class AppModule {
 
     @Singleton
@@ -17,4 +20,5 @@ internal class AppModule {
     ): ViewModelProvider.Factory {
         return MercariViewModelFactory(viewModelSubComponent.build())
     }
+
 }

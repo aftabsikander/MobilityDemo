@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import com.aftabsikander.mercari.MercariApp
 import com.aftabsikander.mercari.R
 import com.aftabsikander.mercari.databinding.CategoryFragmentBinding
 import com.aftabsikander.mercari.network.base.Status
@@ -13,7 +12,6 @@ import com.aftabsikander.mercari.network.models.CategoryModel
 import com.aftabsikander.mercari.ui.adapters.CategoryPagerAdapter
 import com.aftabsikander.mercari.ui.base.BaseFragment
 import com.aftabsikander.mercari.utilities.constants.AppConstants
-import com.aftabsikander.mercari.utilities.extensions.checkNetworkStatus
 import com.aftabsikander.mercari.viewmodel.CategoryListViewModel
 import com.google.android.material.tabs.TabLayout
 
@@ -44,20 +42,18 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (checkNetworkStatus()) {
-            viewModel.performStartLoad().observe(viewLifecycleOwner, Observer { listResource ->
-                if (null != listResource && (listResource.status === Status.ERROR || listResource.status === Status.SUCCESS)) {
-                    dataBinding.Progress.visibility = View.GONE
-                }
-                dataBinding.resource = listResource
-                if (listResource.data != null) {
-                    showMainLayout()
-                    listResource.data as ArrayList<CategoryModel>
-                    adapter?.setData(listResource.data)
-                    updateTabStyleAccordingToCategoryCount(listResource.data.size)
-                }
-            })
-        }
+        viewModel.performStartLoad().observe(viewLifecycleOwner, Observer { listResource ->
+            if (null != listResource && (listResource.status === Status.ERROR || listResource.status === Status.SUCCESS)) {
+                dataBinding.Progress.visibility = View.GONE
+            }
+            dataBinding.resource = listResource
+            if (listResource.data != null) {
+                showMainLayout()
+                listResource.data as ArrayList<CategoryModel>
+                adapter?.setData(listResource.data)
+                updateTabStyleAccordingToCategoryCount(listResource.data.size)
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,7 +66,7 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
     private fun setupViewPager() {
         if (adapter == null) {
             adapter =
-                CategoryPagerAdapter(categoryList, MercariApp.getInstance(), fragmentManager = childFragmentManager)
+                CategoryPagerAdapter(categoryList, fragmentManager = childFragmentManager)
             dataBinding.viewPagerForListing.adapter = adapter
             dataBinding.slidingTabs.setupWithViewPager(dataBinding.viewPagerForListing, true)
             setupPageChangeListener()

@@ -26,14 +26,14 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    internal fun provideRealmDatabase(application: Application, config: RealmConfiguration): Realm {
+    internal fun provideRealmDatabase(config: RealmConfiguration): Realm {
         Realm.setDefaultConfiguration(config)
         return Realm.getDefaultInstance()
     }
 
     @Provides
     @Singleton
-    fun monarchy(config: RealmConfiguration, realm: Realm): Monarchy {
+    fun monarchy(config: RealmConfiguration): Monarchy {
         return Monarchy.Builder()
             .setRealmConfiguration(config)
             .build()

@@ -65,14 +65,7 @@ protected constructor() {
             override fun onFailure(call: Call<V>, t: Throwable) {
                 Timber.d(t)
                 result.removeSource(dbSource)
-                result.addSource(dbSource) { newData ->
-                    result.setValue(
-                        Resource.error(
-                            getCustomErrorMessage(t),
-                            newData
-                        )
-                    )
-                }
+                loadOfflineData(t)
             }
         })
     }
@@ -111,8 +104,24 @@ protected constructor() {
     @MainThread
     protected abstract fun loadFromDb(): LiveData<T>
 
-
+    @MainThread
+    private fun shouldShowOfflineData(): Boolean {
+        return true
+    }
 
     @MainThread
     protected abstract fun createCall(): Call<V>?
+
+    private fun loadOfflineData(t: Throwable) {
+        result.addSource(loadFromDb()) { newData ->
+            if (null != newData) {
+                result.value = Resource.success(newData)
+            } else {
+                Resource.error(
+                    getCustomErrorMessage(t),
+                    newData
+                )
+            }
+        }
+    }
 }

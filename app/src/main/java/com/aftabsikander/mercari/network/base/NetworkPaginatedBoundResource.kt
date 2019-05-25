@@ -57,20 +57,7 @@ protected constructor() {
     init {
         monarchy = this.provideMonarchyInstance()
         result.value = Resource.loading(true)
-        // Always load the data from DB initially so that we have
         dataSourceLive = this.loadFromDb()
-        // Fetch the data from network and add it to the resource
-        /*result.addSource(dataSourceLive) {
-            result.removeSource(dataSourceLive)
-            if (shouldFetch()) {
-                fetchFromNetwork(dataSourceLive)
-            } else {
-                result.addSource(dataSourceLive) { newData ->
-                    if (null != newData)
-                        result.value = Resource.success(newData)
-                }
-            }
-        }*/
     }
 
 

@@ -86,7 +86,7 @@ constructor(private val service: MercariService, var monarchy: Monarchy) {
                     DataSource.Factory<Int, DisplayItem> {
                 return realmDataSource.map { input ->
                     DisplayItem(
-                        input.id, input.categoryName, input.status, input.name, input.likeCount,
+                        input.catID, input.idFromServer, input.categoryName, input.status, input.name, input.likeCount,
                         input.commentCounts, input.amount, input.imgURL
                     )
                 }
