@@ -77,7 +77,7 @@ class CategoryDetailFragment :
         dataBinding.rvDetail.itemAnimator = DefaultItemAnimator()
         dataBinding.rvDetail.setHasFixedSize(true)
         dataBinding.rvDetail.addItemDecoration(
-            ListSpacingDecoration(MercariApp.getInstance(), R.dimen.spacing_small)
+            ListSpacingDecoration(MercariApp.getInstance(), R.dimen.spacing_xsmall)
         )
         dataBinding.rvDetail.layoutManager = GridLayoutManager(activity, 2)
     }

@@ -36,22 +36,34 @@ class DisplayItemHolder(
     fun bindData(displayItem: DisplayItem?) {
         binding.displayItem = displayItem
         binding.executePendingBindings()
-        binding.root.setOnClickListener {
-            displayItem?.let { item -> callback.commentPressed(item) }
-        }
         when (displayItem?.status) {
             DisplayItemStatus.ON_SALE.status -> binding.imgStatus.visibility = View.GONE
             DisplayItemStatus.SOLD_OUT.status -> binding.imgStatus.visibility = View.VISIBLE
             else -> binding.imgStatus.visibility = View.GONE
         }
-
+        setupClickListener(displayItem)
         displayItem?.imgURL?.let { loadImage(binding.imgDisplay.context, it, it) }
     }
 
 
+    private fun setupClickListener(displayItem: DisplayItem?) {
+        binding.root.setOnClickListener {
+            displayItem?.let { item -> callback.displayItemPressed(item) }
+        }
+
+        binding.imgComment.setOnClickListener {
+            displayItem?.let { item -> callback.commentPressed(item) }
+        }
+
+        binding.imgFav.setOnClickListener {
+            displayItem?.let { item -> callback.photoLiked(item) }
+        }
+    }
+
     private fun loadImage(context: Context, thumbLoadUrl: String, fullImageUrl: String) {
         val requestOption = RequestOptions()
             .placeholder(R.drawable.photo_holder)
+            .error(R.drawable.photo_holder)
         Glide.with(context).load(ImageModel(fullImageUrl))
             .transition(DrawableTransitionOptions.withCrossFade())
             .thumbnail(

@@ -45,6 +45,7 @@ protected constructor() {
         dataSourceFactoryForPagingComponent = this.createDataSourceMapping(realmSourceFactor)
         paginationCallback = BoundaryPaginationCallback(this)
 
+
         return monarchy.findAllPagedWithChanges(
             realmSourceFactor,
             LivePagedListBuilder<Int, T>(dataSourceFactoryForPagingComponent, providePageConfig())
@@ -55,8 +56,11 @@ protected constructor() {
 
     init {
         monarchy = this.provideMonarchyInstance()
-        //result.value = Resource.loading(true)
         dataSourceLive = this.loadFromDb()
+
+        if (shouldFetch()) {
+            fetchFromNetwork(this.loadFromDb())
+        }
     }
 
 
@@ -67,9 +71,9 @@ protected constructor() {
      * @param [dbSource] - Database source
      */
     private fun fetchFromNetwork(dbSource: LiveData<T>) {
-       /* result.addSource(dbSource) {
-            result.setValue(Resource.loading(true))
-        }*/
+        /* result.addSource(dbSource) {
+             result.setValue(Resource.loading(true))
+         }*/
         createCall()?.enqueue(object : Callback<V> {
             override fun onResponse(call: Call<V>, response: Response<V>) {
                 //result.removeSource(dbSource)
@@ -167,10 +171,8 @@ protected constructor() {
          * When all items in the database were loaded, we need to query the backend for more items.
          */
         override fun onItemAtEndLoaded(itemAtEnd: T) {
-            //TODO will be implemented later when pagination API is available. For now calling same API
-            networkBoundResource.fetchFromNetwork(networkBoundResource.dataSourceLive)
+            //TODO will be implemented later when pagination API is available.
         }
-
     }
 
 }

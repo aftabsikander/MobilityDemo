@@ -53,6 +53,7 @@
         <item name="tabIndicatorHeight">4dp</item>
         <item name="tabBackground">@color/white</item>
         <item name="tabTextAppearance">@style/TabTextAppearanceStyle</item>
+        <item name="tabTextColor">@color/light_red</item>
         <item name="tabSelectedTextColor">@color/colorAccent</item>
     </style>
 

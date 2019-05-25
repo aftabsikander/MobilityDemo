@@ -14,22 +14,26 @@ import com.aftabsikander.mercari.ui.base.BaseFragment
 import com.aftabsikander.mercari.utilities.constants.AppConstants
 import com.aftabsikander.mercari.viewmodel.CategoryListViewModel
 import com.google.android.material.tabs.TabLayout
+import timber.log.Timber
 
 class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBinding>() {
 
     private var categoryList = arrayListOf<CategoryModel>()
     private var rootView: View? = null
     private var adapter: CategoryPagerAdapter? = null
+    private var selectedTab = 0
+
+
+    companion object {
+        fun newInstance() = CategoryFragment()
+    }
+
     override fun getViewModel(): Class<CategoryListViewModel> {
         return CategoryListViewModel::class.java
     }
 
     override fun getLayoutRes(): Int {
         return R.layout.category_fragment
-    }
-
-    companion object {
-        fun newInstance() = CategoryFragment()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,6 +56,7 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
                 listResource.data as ArrayList<CategoryModel>
                 adapter?.setData(listResource.data)
                 updateTabStyleAccordingToCategoryCount(listResource.data.size)
+                dataBinding.viewPagerForListing.currentItem = selectedTab
             }
         })
     }
@@ -60,7 +65,29 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
         super.onViewCreated(view, savedInstanceState)
         setToolbarText(this.getString(R.string.app_name))
         setupViewPager()
+        if (savedInstanceState != null) {
+            restoreInstance(savedInstanceState)
+        }
+
+        dataBinding.fabSell.setOnClickListener {
+            Timber.d("Fab Clicked")
+        }
     }
+
+    //region General Helper methods
+    private fun showMainLayout() {
+        dataBinding.viewPagerForListing.visibility = View.VISIBLE
+        dataBinding.fabSell.visibility = View.VISIBLE
+    }
+
+    private fun updateTabStyleAccordingToCategoryCount(tabCount: Int) {
+        if (tabCount >= AppConstants.MINIMUM_TAB_SCROLL_COUNT) {
+            dataBinding.slidingTabs.tabMode = TabLayout.MODE_SCROLLABLE
+        } else {
+            dataBinding.slidingTabs.tabMode = TabLayout.MODE_FIXED
+        }
+    }
+    //endregion
 
     //region Helper methods for Setting up View pager and Tab layout
     private fun setupViewPager() {
@@ -91,18 +118,18 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
     }
     //endregion
 
-    //region General Helper methods
-    private fun showMainLayout() {
-        dataBinding.viewPagerForListing.visibility = View.VISIBLE
-        dataBinding.fabSell.visibility = View.VISIBLE
+    //region Save State and Restore States
+    override fun onSaveInstanceState(outState: Bundle) {
+        saveState(outState)
+        super.onSaveInstanceState(outState)
     }
 
-    private fun updateTabStyleAccordingToCategoryCount(tabCount: Int) {
-        if (tabCount >= AppConstants.MINIMUM_TAB_SCROLL_COUNT) {
-            dataBinding.slidingTabs.tabMode = TabLayout.MODE_SCROLLABLE
-        } else {
-            dataBinding.slidingTabs.tabMode = TabLayout.MODE_FIXED
-        }
+    private fun saveState(outState: Bundle) {
+        outState.putInt("selectedTab", dataBinding.slidingTabs.selectedTabPosition)
+    }
+
+    private fun restoreInstance(outState: Bundle) {
+        selectedTab = outState.getInt("selectedTab", 0)
     }
     //endregion
 
