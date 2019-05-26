@@ -51,7 +51,7 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
                 dataBinding.Progress.visibility = View.GONE
             }
             dataBinding.resource = listResource
-            if (listResource.data != null) {
+            if (listResource.data != null && listResource.data.isNotEmpty()) {
                 showMainLayout()
                 listResource.data as ArrayList<CategoryModel>
                 adapter?.setData(listResource.data)

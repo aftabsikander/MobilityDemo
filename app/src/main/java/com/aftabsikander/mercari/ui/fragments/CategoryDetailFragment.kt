@@ -71,8 +71,8 @@ class CategoryDetailFragment :
                 dataBinding.Progress.visibility = View.GONE
             }
             dataBinding.resource = listResource
-            if (listResource.data != null) {
-
+            if (listResource.data.isNullOrEmpty()) {
+                dataBinding.rvDetail.visibility = View.VISIBLE
             }
         })
     }

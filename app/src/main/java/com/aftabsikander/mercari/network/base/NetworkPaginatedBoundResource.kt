@@ -83,9 +83,7 @@ protected constructor() {
      * @param [dbSource] - Database source
      */
     private fun fetchFromNetwork(dbSource: LiveData<K>) {
-        result.addSource(dbSource) {
-            result.setValue(Resource.loading(true))
-        }
+        result.value = Resource.loading(true)
         createCall()?.enqueue(object : Callback<V> {
             override fun onResponse(call: Call<V>, response: Response<V>) {
                 result.removeSource(dbSource)
@@ -163,9 +161,11 @@ protected constructor() {
             if (null != newData) {
                 result.value = Resource.success(newData)
             } else {
-                Resource.error(
-                    getCustomErrorMessage(t),
-                    newData
+                result.setValue(
+                    Resource.error(
+                        getCustomErrorMessage(t),
+                        newData
+                    )
                 )
             }
         }

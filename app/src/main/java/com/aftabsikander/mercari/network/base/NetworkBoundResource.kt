@@ -117,9 +117,11 @@ protected constructor() {
             if (null != newData) {
                 result.value = Resource.success(newData)
             } else {
-                Resource.error(
-                    getCustomErrorMessage(t),
-                    newData
+                result.setValue(
+                    Resource.error(
+                        getCustomErrorMessage(t),
+                        newData
+                    )
                 )
             }
         }

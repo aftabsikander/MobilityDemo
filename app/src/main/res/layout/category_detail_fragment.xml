@@ -18,7 +18,7 @@
                 android:layout_centerInParent="true"
                 android:indeterminateTint="@color/colorPrimary"
                 android:indeterminateTintMode="src_in"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/errorText"
@@ -33,6 +33,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvDetail"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
