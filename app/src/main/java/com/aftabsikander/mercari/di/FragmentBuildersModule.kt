@@ -5,6 +5,9 @@ import com.aftabsikander.mercari.ui.fragments.CategoryFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
+/**
+ * All [androidx.fragment.app.Fragment] Dependency graph for [dagger.android] injection
+ */
 @Module
 abstract class FragmentBuildersModule {
 

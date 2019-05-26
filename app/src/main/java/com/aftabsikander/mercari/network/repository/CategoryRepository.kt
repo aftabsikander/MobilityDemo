@@ -42,6 +42,17 @@ constructor(private val service: MercariService, var monarchy: Monarchy) {
      */
     fun loadCategories(): LiveData<Resource<List<CategoryModel>>> {
         return object : NetworkBoundResource<List<CategoryModel>, ArrayList<CategoryModel>>() {
+            override fun offlineDataExist(): Boolean {
+                var dataFound = false
+                val realm = Realm.getDefaultInstance()
+                realm.executeTransaction {
+                    val dataObject = realm.where(CategoryModel::class.java).findFirst()
+                    dataFound = dataObject != null
+                }
+                realm.close()
+                return dataFound
+            }
+
             override fun saveCallResult(item: ArrayList<CategoryModel>?) {
                 val realm = Realm.getDefaultInstance()
                 realm.executeTransaction {
@@ -140,6 +151,20 @@ constructor(private val service: MercariService, var monarchy: Monarchy) {
             override fun liveDataReceiver(receiver: MutableLiveData<Resource<List<DisplayItem>>>) {
                 liveDataReceiverForPagination = receiver
             }
+
+            override fun offlineDataExist(): Boolean {
+                var dataFound = false
+                val realm = Realm.getDefaultInstance()
+                realm.executeTransaction {
+                    val dataObject = realm.where(DisplayItem::class.java).equalTo(
+                        "categoryName", categoryID, Case.INSENSITIVE
+                    ).findFirst()
+                    dataFound = dataObject != null
+                }
+                realm.close()
+                return dataFound
+            }
+
         }.setupPagination()
     }
 

@@ -105,7 +105,6 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
         if (adapter == null) {
             adapter = CategoryPagerAdapter(categoryList, fragmentManager = childFragmentManager)
             dataBinding.viewPagerForListing.adapter = adapter
-            dataBinding.viewPagerForListing.offscreenPageLimit = AppConstants.MINIMUM_TAB_SCROLL_COUNT
             dataBinding.slidingTabs.setupWithViewPager(dataBinding.viewPagerForListing, true)
             setupPageChangeListener()
         }

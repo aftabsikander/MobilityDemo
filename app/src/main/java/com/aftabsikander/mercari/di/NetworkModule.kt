@@ -21,9 +21,17 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 
+/**
+ * Network layer which contains key component providers.
+ */
 @Module
 class NetworkModule {
 
+    /**
+     * Provides [OkHttpClient] instance with pre configuration setup.
+     *
+     * @return [OkHttpClient] instance
+     */
     @Singleton
     @Provides
     fun provideOkHttpClient(): OkHttpClient {
@@ -32,12 +40,18 @@ class NetworkModule {
         return OkHttpClient.Builder()
             .connectTimeout(AppConstants.WEB_CONNECTION_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(AppConstants.WEB_READ_TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(AppConstants.WEB_WRITE_FILE_TIMEOUT, TimeUnit.MINUTES)
+            //.writeTimeout(AppConstants.WEB_WRITE_FILE_TIMEOUT, TimeUnit.MINUTES)
             .addInterceptor(RequestInterceptor())
             .addInterceptor(interceptor)
             .build()
     }
 
+    /**
+     * Provides [Cache] instance for our application which would be used by [OkHttpClient] client.
+     * @param application [Application] instance which will used to retrieve our cache directory of the app.
+     *
+     * @return [Cache] Instance.
+     */
     @Provides
     @Singleton
     fun providesOkHttpCache(application: Application): Cache {
@@ -46,6 +60,11 @@ class NetworkModule {
     }
 
 
+    /**
+     * Provides [Gson] instance with pre configuration values and it would be used by [Retrofit] client.
+     *
+     * @return [Gson] instance
+     */
     @Singleton
     @Provides
     fun provideGsonConfig(): Gson {
@@ -57,6 +76,11 @@ class NetworkModule {
     }
 
 
+    /**
+     * Provides [Retrofit] instance with pre configuration values and it would be used across the application.
+     *
+     * @return [Retrofit] instance
+     */
     @Singleton
     @Provides
     fun provideRetrofit(): Retrofit {
@@ -67,6 +91,14 @@ class NetworkModule {
             .build()
     }
 
+
+    /**
+     * Provides [MercariService] service End point instance which will be used by [Retrofit]
+     * internally for creating service calls.
+     * @param retrofit [Retrofit] client object
+     *
+     * @return [MercariService] instance
+     */
     @Singleton
     @Provides
     fun provideApiService(retrofit: Retrofit): MercariService {

@@ -68,6 +68,7 @@ protected constructor() {
             }
 
             override fun onFailure(call: Call<V>, t: Throwable) {
+                call.cancel()
                 Timber.d(t)
                 result.removeSource(dbSource)
                 loadOfflineData(t)
@@ -151,6 +152,14 @@ protected constructor() {
     @MainThread
     protected abstract fun createCall(): Call<V>?
 
+    /**
+     * Validate does data exist in our cache
+     *
+     * @return True if data exist, otherwise false
+     */
+    @MainThread
+    protected abstract fun offlineDataExist(): Boolean
+
     //endregion
 
 
@@ -162,7 +171,7 @@ protected constructor() {
      */
     private fun loadOfflineData(t: Throwable) {
         result.addSource(loadFromDb()) { newData ->
-            if (null != newData) {
+            if (null != newData && offlineDataExist()) {
                 result.value = Resource.success(newData)
             } else {
                 result.setValue(
