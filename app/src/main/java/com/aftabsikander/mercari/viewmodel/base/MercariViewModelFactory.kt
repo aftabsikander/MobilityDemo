@@ -4,6 +4,7 @@ import androidx.collection.ArrayMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.aftabsikander.mercari.di.ViewModelSubComponent
+import com.aftabsikander.mercari.viewmodel.CategoryDetailViewModel
 import com.aftabsikander.mercari.viewmodel.CategoryListViewModel
 import java.util.concurrent.Callable
 import javax.inject.Inject
@@ -19,7 +20,8 @@ constructor(viewModelSubComponent: ViewModelSubComponent) : ViewModelProvider.Fa
         creators[CategoryListViewModel::class.java] =
             Callable<ViewModel> { viewModelSubComponent.categoryListViewModel() }
 
-
+        creators[CategoryDetailViewModel::class.java] =
+            Callable<ViewModel> { viewModelSubComponent.categoryDetailViewModel() }
     }
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

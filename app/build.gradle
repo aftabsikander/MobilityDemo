@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
@@ -140,8 +141,8 @@ final daggerInjection = [
 ]
 
 final imageLoadingDependencies = [
-        glide         : "com.github.bumptech.glide:glide:4.8.0",
-        glideTransform: "jp.wasabeef:glide-transformations:3.3.0"
+        glide         : "com.github.bumptech.glide:glide:4.9.0",
+        glideTransform: "jp.wasabeef:glide-transformations:4.0.1"
 ]
 
 final architectureComponents = [
@@ -151,11 +152,12 @@ final architectureComponents = [
         viewModel          : "androidx.lifecycle:lifecycle-viewmodel:${rootProject.ext.viewModelVersion}"
 ]
 
+
 final compileDep = [
         lifeCycleCompile    : "android.arch.lifecycle:compiler:${rootProject.ext.archVersion}",
         daggerprocessCompile: "com.google.dagger:dagger-android-processor:${rootProject.ext.daggerVersion}",
         daggerCompile       : "com.google.dagger:dagger-compiler:${rootProject.ext.daggerVersion}",
-        glideCompile        : "com.github.bumptech.glide:compiler:4.8.0"
+        glideCompile        : "com.github.bumptech.glide:compiler:4.9.0"
 ]
 
 final extras = [
@@ -183,5 +185,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0-beta01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'
 
-
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.0@aar') {
+        transitive = true
+    }
 }

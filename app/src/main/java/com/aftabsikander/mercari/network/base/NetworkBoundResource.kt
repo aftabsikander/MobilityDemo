@@ -13,6 +13,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
+import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
 
@@ -62,15 +63,9 @@ protected constructor() {
             }
 
             override fun onFailure(call: Call<V>, t: Throwable) {
+                Timber.d(t)
                 result.removeSource(dbSource)
-                result.addSource(dbSource) { newData ->
-                    result.setValue(
-                        Resource.error(
-                            getCustomErrorMessage(t),
-                            newData
-                        )
-                    )
-                }
+                loadOfflineData(t)
             }
         })
     }
@@ -109,8 +104,26 @@ protected constructor() {
     @MainThread
     protected abstract fun loadFromDb(): LiveData<T>
 
-
+    @MainThread
+    private fun shouldShowOfflineData(): Boolean {
+        return true
+    }
 
     @MainThread
     protected abstract fun createCall(): Call<V>?
+
+    private fun loadOfflineData(t: Throwable) {
+        result.addSource(loadFromDb()) { newData ->
+            if (null != newData) {
+                result.value = Resource.success(newData)
+            } else {
+                result.setValue(
+                    Resource.error(
+                        getCustomErrorMessage(t),
+                        newData
+                    )
+                )
+            }
+        }
+    }
 }

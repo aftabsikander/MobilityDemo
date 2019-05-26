@@ -1,4 +1,4 @@
-package com.aftabsikander.mercari.utilities
+package com.aftabsikander.mercari.utilities.constants
 
 object DatabaseConstants {
     const val NAME = "MercariDB.realm"

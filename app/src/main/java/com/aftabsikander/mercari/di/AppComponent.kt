@@ -5,6 +5,7 @@ import com.aftabsikander.mercari.MercariApp
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
+import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
 @Singleton
@@ -21,4 +22,7 @@ interface AppComponent {
 
     fun inject(app: MercariApp)
 
+    fun getPerformanceChecker(): PerformanceChecker
+
+    fun getOkHttpClient() : OkHttpClient
 }
