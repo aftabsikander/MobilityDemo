@@ -12,10 +12,17 @@ import com.aftabsikander.mercari.network.models.CategoryModel
 import com.aftabsikander.mercari.ui.adapters.CategoryPagerAdapter
 import com.aftabsikander.mercari.ui.base.BaseFragment
 import com.aftabsikander.mercari.utilities.constants.AppConstants
+
 import com.aftabsikander.mercari.viewmodel.CategoryListViewModel
 import com.google.android.material.tabs.TabLayout
 import timber.log.Timber
 
+/**
+ * Category Tab fragment which displays tab layout and view pager on screen.
+ *
+ * @see [CategoryListViewModel]
+ * @see [BaseFragment]
+ */
 class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBinding>() {
 
     private var categoryList = arrayListOf<CategoryModel>()
@@ -46,19 +53,7 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.performStartLoad().observe(viewLifecycleOwner, Observer { listResource ->
-            if (null != listResource && (listResource.status === Status.ERROR || listResource.status === Status.SUCCESS)) {
-                dataBinding.Progress.visibility = View.GONE
-            }
-            dataBinding.resource = listResource
-            if (listResource.data != null && listResource.data.isNotEmpty()) {
-                showMainLayout()
-                listResource.data as ArrayList<CategoryModel>
-                adapter?.setData(listResource.data)
-                updateTabStyleAccordingToCategoryCount(listResource.data.size)
-                dataBinding.viewPagerForListing.currentItem = selectedTab
-            }
-        })
+        loadCategoryData()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,11 +70,23 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
     }
 
     //region General Helper methods
+    /**
+     * Show view pager and fab icon on UI after API is successfully called.
+     */
     private fun showMainLayout() {
         dataBinding.viewPagerForListing.visibility = View.VISIBLE
         dataBinding.fabSell.visibility = View.VISIBLE
     }
 
+    /**
+     * Updated [TabLayout.mode] according to current tab count inside [TabLayout] instance on UI.
+     * If the current count is greater or equal to [AppConstants.MINIMUM_TAB_SCROLL_COUNT] we will update mode to either
+     * [TabLayout.MODE_SCROLLABLE] or [TabLayout.MODE_FIXED] respectively
+     *
+     * @param tabCount current tab count inside [androidx.viewpager.widget.ViewPager] or [TabLayout].
+     *
+     * @see [TabLayout]
+     */
     private fun updateTabStyleAccordingToCategoryCount(tabCount: Int) {
         if (tabCount >= AppConstants.MINIMUM_TAB_SCROLL_COUNT) {
             dataBinding.slidingTabs.tabMode = TabLayout.MODE_SCROLLABLE
@@ -90,10 +97,13 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
     //endregion
 
     //region Helper methods for Setting up View pager and Tab layout
+    /**
+     * Setup configuration for [androidx.viewpager.widget.ViewPager] and assign it to our [TabLayout].
+     * @see [CategoryPagerAdapter]
+     */
     private fun setupViewPager() {
         if (adapter == null) {
-            adapter =
-                CategoryPagerAdapter(categoryList, fragmentManager = childFragmentManager)
+            adapter = CategoryPagerAdapter(categoryList, fragmentManager = childFragmentManager)
             dataBinding.viewPagerForListing.adapter = adapter
             dataBinding.viewPagerForListing.offscreenPageLimit = AppConstants.MINIMUM_TAB_SCROLL_COUNT
             dataBinding.slidingTabs.setupWithViewPager(dataBinding.viewPagerForListing, true)
@@ -101,6 +111,9 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
         }
     }
 
+    /**
+     * Set [TabLayout.addOnTabSelectedListener] listener for further usage
+     */
     private fun setupPageChangeListener() {
         dataBinding.slidingTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -124,12 +137,47 @@ class CategoryFragment : BaseFragment<CategoryListViewModel, CategoryFragmentBin
         super.onSaveInstanceState(outState)
     }
 
+    /**
+     * Save state due to device rotation.
+     * @param outState [Bundle] instance
+     *
+     * @see [onSaveInstanceState]
+     */
     private fun saveState(outState: Bundle) {
         outState.putInt("selectedTab", dataBinding.slidingTabs.selectedTabPosition)
     }
 
+    /**
+     * Restore our fragment state on screen after successful recreating.
+     */
     private fun restoreInstance(outState: Bundle) {
         selectedTab = outState.getInt("selectedTab", 0)
+    }
+    //endregion
+
+    //region Helper methods for View Model
+    /**
+     * Load category data from repository and observer it's changes and display it on UI
+     *
+     * @see [CategoryListViewModel]
+     * @see [com.aftabsikander.mercari.network.repository.CategoryRepository]
+     */
+    private fun loadCategoryData() {
+        viewModel.loadCategoryData().observe(viewLifecycleOwner, Observer { listResource ->
+            if (null != listResource && (listResource.status === Status.ERROR ||
+                        listResource.status === Status.SUCCESS)
+            ) {
+                dataBinding.Progress.visibility = View.GONE
+            }
+            dataBinding.resource = listResource
+            if (listResource.data != null && listResource.data.isNotEmpty()) {
+                showMainLayout()
+                listResource.data as ArrayList<CategoryModel>
+                adapter?.setData(listResource.data)
+                updateTabStyleAccordingToCategoryCount(listResource.data.size)
+                dataBinding.viewPagerForListing.currentItem = selectedTab
+            }
+        })
     }
     //endregion
 

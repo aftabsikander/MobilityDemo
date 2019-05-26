@@ -32,6 +32,7 @@ class NetworkModule {
         return OkHttpClient.Builder()
             .connectTimeout(AppConstants.WEB_CONNECTION_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(AppConstants.WEB_READ_TIMEOUT, TimeUnit.SECONDS)
+            .writeTimeout(AppConstants.WEB_WRITE_FILE_TIMEOUT, TimeUnit.MINUTES)
             .addInterceptor(RequestInterceptor())
             .addInterceptor(interceptor)
             .build()

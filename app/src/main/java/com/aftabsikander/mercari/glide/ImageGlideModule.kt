@@ -12,6 +12,12 @@ import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import java.io.InputStream
 
+
+/**
+ * Glide Module which configure [Glide] instance across the app usage.
+ *
+ * @see [AppGlideModule]
+ */
 @GlideModule
 class ImageGlideModule : AppGlideModule() {
 

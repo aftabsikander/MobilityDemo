@@ -21,9 +21,16 @@ import com.aftabsikander.mercari.viewmodel.CategoryDetailViewModel
 import timber.log.Timber
 
 
+/**
+ * Category Display Item fragment which displays all the items present in specific category
+ *
+ * @see [com.aftabsikander.mercari.callbacks.DisplayItemClickListener]
+ * @see [CategoryDetailViewModel]
+ * @see [BaseFragment]
+ */
 class CategoryDetailFragment :
     BaseFragment<CategoryDetailViewModel, CategoryDetailFragmentBinding>(), DisplayItemClickListener {
-    private var detailList = arrayListOf<DisplayItem>()
+
     private lateinit var adapter: DisplayListAdapter
     private lateinit var categoryID: String
     private var rootView: View? = null
@@ -62,10 +69,87 @@ class CategoryDetailFragment :
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.performCategoryLoad(categoryID).observe(viewLifecycleOwner, Observer {
+        loadDisplayItemsForCategory()
+        observePaginationNetworkChanges()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRecycleView()
+        setupDisplayListAdapter()
+    }
+
+    //region Helper method for RecycleView Setup & Adapter
+    /**
+     * Setup [androidx.recyclerview.widget.RecyclerView] configuration
+     */
+    private fun setupRecycleView() {
+        dataBinding.rvDetail.isVerticalScrollBarEnabled = true
+        dataBinding.rvDetail.itemAnimator = DefaultItemAnimator()
+        dataBinding.rvDetail.setHasFixedSize(true)
+        dataBinding.rvDetail.addItemDecoration(ListSpacingDecoration(MercariApp.getInstance(), R.dimen.spacing_xsmall))
+        dataBinding.rvDetail.layoutManager = GridLayoutManager(activity, 2)
+    }
+
+    /**
+     * Setup adapter which holds category display items
+     */
+    private fun setupDisplayListAdapter() {
+        adapter = DisplayListAdapter(itemClick = this)
+        dataBinding.rvDetail.adapter = adapter
+
+    }
+    //endregion
+
+    //region Display Item Click events
+
+    /**
+     * Handle display item click event
+     * @param item [DisplayItem] instance
+     */
+    override fun displayItemPressed(item: DisplayItem) {
+        Timber.d("Item clicked")
+    }
+
+    /**
+     * Handle photo like click event
+     * @param item [DisplayItem] instance
+     */
+    override fun photoLiked(item: DisplayItem) {
+        Timber.d("Photo liked")
+    }
+
+    /**
+     * Handle Comment click event
+     * @param item [DisplayItem] instance
+     */
+    override fun commentPressed(item: DisplayItem) {
+        Timber.d("Comment Pressed")
+    }
+
+    //endregion
+
+    //region Helper methods for View Model
+
+    /**
+     * Observe display item collection for specific category and display it on UI.
+     *
+     * @see [CategoryDetailViewModel]
+     * @see [com.aftabsikander.mercari.network.repository.CategoryRepository]
+     */
+    private fun loadDisplayItemsForCategory() {
+        viewModel.performDisplayItemLoading(categoryID).observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
         })
+    }
 
+    /**
+     * Observe Pagination network changes when loading data from repository
+     *
+     * @see [CategoryDetailViewModel]
+     * @see [com.aftabsikander.mercari.network.repository.CategoryRepository]
+     */
+    private fun observePaginationNetworkChanges() {
         viewModel.getLiveDataForPaginationCallBack().observe(viewLifecycleOwner, Observer { listResource ->
             if (null != listResource && (listResource.status === Status.ERROR || listResource.status === Status.SUCCESS)) {
                 dataBinding.Progress.visibility = View.GONE
@@ -77,43 +161,6 @@ class CategoryDetailFragment :
         })
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupRecycleView()
-        setupDisplayListAdapter()
-    }
-
-    //region Helper method for RecycleView Setup & Adapter
-    private fun setupRecycleView() {
-        dataBinding.rvDetail.isVerticalScrollBarEnabled = true
-        dataBinding.rvDetail.itemAnimator = DefaultItemAnimator()
-        dataBinding.rvDetail.setHasFixedSize(true)
-        dataBinding.rvDetail.addItemDecoration(
-            ListSpacingDecoration(MercariApp.getInstance(), R.dimen.spacing_xsmall)
-        )
-        dataBinding.rvDetail.layoutManager = GridLayoutManager(activity, 2)
-    }
-
-    private fun setupDisplayListAdapter() {
-        adapter = DisplayListAdapter(itemClick = this)
-        dataBinding.rvDetail.adapter = adapter
-
-    }
-    //endregion
-
-
-    //region Display Item Click events
-    override fun displayItemPressed(item: DisplayItem) {
-        Timber.d("Item clicked")
-    }
-
-    override fun photoLiked(item: DisplayItem) {
-        Timber.d("Photo liked")
-    }
-
-    override fun commentPressed(item: DisplayItem) {
-        Timber.d("Comment Pressed")
-    }
     //endregion
 
 }

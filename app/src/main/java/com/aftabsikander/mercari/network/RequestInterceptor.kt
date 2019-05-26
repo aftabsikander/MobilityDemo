@@ -8,8 +8,10 @@ import java.net.HttpURLConnection
 
 /**
  * Request Interceptor for Retrofit which automatically send Refresh token call if we receive
- * {@link HttpURLConnection#HTTP_UNAUTHORIZED} status code.
+ * [java.net.HttpURLConnection.HTTP_UNAUTHORIZED] status code.
  * If we fail to acquire new token we force logout user.
+ *
+ * @see [okhttp3.Interceptor]
  */
 class RequestInterceptor : Interceptor {
 
@@ -28,7 +30,6 @@ class RequestInterceptor : Interceptor {
 
     /**
      * Set Authorization Header for Retrofit client
-     *
      * @param builder [Request.Builder] object
      */
     private fun setHeaders(builder: Request.Builder) {

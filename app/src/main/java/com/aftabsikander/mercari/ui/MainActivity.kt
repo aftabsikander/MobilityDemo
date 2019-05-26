@@ -11,8 +11,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
-    override val layoutRes: Int
-        get() = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +22,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 R.id.fragContainer, false, TRANSITION_NONE
             )
         }
+    }
 
+    /**
+     * Get Layout resource id for inflating.
+     * @return [androidx.annotation.LayoutRes] ID
+     */
+    override fun getLayoutRes(): Int {
+        return R.layout.activity_main
     }
 
 }

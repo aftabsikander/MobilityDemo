@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.*
 
 /***
  * Equal Spacing item decoration which handles equal spacing on each sides of item.
+ * @see [androidx.recyclerview.widget.RecyclerView.ItemDecoration]
  */
 class ListSpacingDecoration : RecyclerView.ItemDecoration {
     private var orientation = -1
@@ -106,16 +107,12 @@ class ListSpacingDecoration : RecyclerView.ItemDecoration {
      * @return layout manager orientation.
      */
     private fun getOrientation(parent: RecyclerView): Int {
-
-        val mgr = parent.layoutManager
-        if (mgr is LinearLayoutManager) {
-            return mgr.orientation
-        } else if (mgr is GridLayoutManager) {
-            return mgr.orientation
-        } else if (mgr is StaggeredGridLayoutManager) {
-            return mgr.orientation
+        return when (val mgr = parent.layoutManager) {
+            is LinearLayoutManager -> mgr.orientation
+            is GridLayoutManager -> mgr.orientation
+            is StaggeredGridLayoutManager -> mgr.orientation
+            else -> VERTICAL
         }
-        return VERTICAL
     }
     //endregion
 
@@ -127,17 +124,13 @@ class ListSpacingDecoration : RecyclerView.ItemDecoration {
      * @return span count which is hold inside recycle view layout manager.
      */
     private fun getTotalSpan(parent: RecyclerView): Int {
-
-        val mgr = parent.layoutManager
-        if (mgr is GridLayoutManager) {
-            return mgr.spanCount
-        } else if (mgr is StaggeredGridLayoutManager) {
-            return mgr.spanCount
-        } else if (mgr is LinearLayoutManager) {
-            return 1
+        return when (val mgr = parent.layoutManager) {
+            is GridLayoutManager -> mgr.spanCount
+            is StaggeredGridLayoutManager -> mgr.spanCount
+            is LinearLayoutManager -> 1
+            else -> -1
         }
 
-        return -1
     }
 
     /***
@@ -147,17 +140,12 @@ class ListSpacingDecoration : RecyclerView.ItemDecoration {
      * @return updated Item span size for current child position.
      */
     private fun getItemSpanSize(parent: RecyclerView, childIndex: Int): Int {
-
-        val mgr = parent.layoutManager
-        if (mgr is GridLayoutManager) {
-            return mgr.spanSizeLookup.getSpanSize(childIndex)
-        } else if (mgr is StaggeredGridLayoutManager) {
-            return 1
-        } else if (mgr is LinearLayoutManager) {
-            return 1
+        return when (val mgr = parent.layoutManager) {
+            is GridLayoutManager -> mgr.spanSizeLookup.getSpanSize(childIndex)
+            is StaggeredGridLayoutManager -> 1
+            is LinearLayoutManager -> 1
+            else -> -1
         }
-
-        return -1
     }
 
     /***
@@ -167,18 +155,13 @@ class ListSpacingDecoration : RecyclerView.ItemDecoration {
      * @return updated Item span size for current child position.
      */
     private fun getItemSpanIndex(parent: RecyclerView, childIndex: Int): Int {
-
-        val layoutManager = parent.layoutManager
-        if (layoutManager is GridLayoutManager) {
-            return layoutManager.spanSizeLookup
+        return when (val layoutManager = parent.layoutManager) {
+            is GridLayoutManager -> layoutManager.spanSizeLookup
                 .getSpanIndex(childIndex, spanCount)
-        } else if (layoutManager is StaggeredGridLayoutManager) {
-            return childIndex % spanCount
-        } else if (layoutManager is LinearLayoutManager) {
-            return 0
+            is StaggeredGridLayoutManager -> childIndex % spanCount
+            is LinearLayoutManager -> 0
+            else -> -1
         }
-
-        return -1
     }
     //endregion
 
