@@ -33,7 +33,7 @@ The application has been built with  **offline support**. It has been designed u
 
 ## Application Architecture
 
-<img src="/screenshots/screenshot_mvvm_diagram_overview.jpg" width="346" height="615" alt="MVVM"/>
+<img src="/screenshots/screenshot_mvvm_diagram_overview.jpg" alt="MVVM"/>
 
 The main advantage of using MVVM, there is no two-way dependency between ViewModel and Model, unlike MVP. Here the viewer can observe the data changes in the ViewModel as we are using LiveData which is lifecycle aware. The ViewModel to view communication is achieved through observer pattern basically observing the state changes of the data in the ViewModel. 
 
@@ -85,3 +85,5 @@ There are four [build variant](https://developer.android.com/studio/build/build-
 
 <img src="/screenshots/screenshot_build_variant_support.png" alt="Build Variant"/>
 
+
+## TODO Improvements Task
