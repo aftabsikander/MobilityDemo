@@ -11,6 +11,7 @@ import com.aftabsikander.mercari.MercariApp
 import com.aftabsikander.mercari.R
 import com.aftabsikander.mercari.callbacks.DisplayItemClickListener
 import com.aftabsikander.mercari.databinding.CategoryDetailFragmentBinding
+import com.aftabsikander.mercari.network.base.Status
 import com.aftabsikander.mercari.network.models.DisplayItem
 import com.aftabsikander.mercari.ui.adapters.DisplayListAdapter
 import com.aftabsikander.mercari.ui.base.BaseFragment
@@ -18,6 +19,7 @@ import com.aftabsikander.mercari.ui.widget.ListSpacingDecoration
 import com.aftabsikander.mercari.utilities.constants.BundleConstants
 import com.aftabsikander.mercari.viewmodel.CategoryDetailViewModel
 import timber.log.Timber
+
 
 class CategoryDetailFragment :
     BaseFragment<CategoryDetailViewModel, CategoryDetailFragmentBinding>(), DisplayItemClickListener {
@@ -62,6 +64,16 @@ class CategoryDetailFragment :
         super.onActivityCreated(savedInstanceState)
         viewModel.performCategoryLoad(categoryID).observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
+        })
+
+        viewModel.getLiveDataForPaginationCallBack().observe(viewLifecycleOwner, Observer { listResource ->
+            if (null != listResource && (listResource.status === Status.ERROR || listResource.status === Status.SUCCESS)) {
+                dataBinding.Progress.visibility = View.GONE
+            }
+            dataBinding.resource = listResource
+            if (listResource.data != null) {
+
+            }
         })
     }
 

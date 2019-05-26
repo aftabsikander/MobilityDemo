@@ -4,6 +4,7 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -26,17 +27,18 @@ import java.net.SocketTimeoutException
  * This class act as the decider to cache the response/ fetch from the service always as a paginated data source.
  * [T] Input Request Response
  * [V] The type of the entries in the list which would be passed back as [PagedList] source
+ * [K] Output type for LiveData observable which would be listened on UI for Network Info
  */
-abstract class NetworkPaginatedBoundResource<T : RealmModel, V> @MainThread
+abstract class NetworkPaginatedBoundResource<T : RealmModel, V, K> @MainThread
 protected constructor() {
 
     private lateinit var realmSourceFactor: Monarchy.RealmDataSourceFactory<T>
     private lateinit var dataSourceFactoryForPagingComponent: DataSource.Factory<Int, T>
     private lateinit var paginationCallback: BoundaryPaginationCallback
-    private var dataSourceLive: LiveData<T>
+    private var dataSourceLive: MutableLiveData<K>
     private var monarchy: Monarchy
-    private val result = MediatorLiveData<Resource<T>>()
-    val asLiveData: LiveData<Resource<T>> get() = result
+    private val result = MediatorLiveData<Resource<K>>()
+    val asLiveData: MutableLiveData<Resource<K>> get() = result
 
 
     fun setupPagination(): LiveData<PagedList<T>> {
@@ -55,12 +57,22 @@ protected constructor() {
     }
 
     init {
+        this.liveDataReceiver(result)
         monarchy = this.provideMonarchyInstance()
         dataSourceLive = this.loadFromDb()
-
-        if (shouldFetch()) {
-            fetchFromNetwork(this.loadFromDb())
+        // Fetch the data from network and add it to the resource
+        result.addSource(dataSourceLive) {
+            result.removeSource(dataSourceLive)
+            if (shouldFetch()) {
+                fetchFromNetwork(dataSourceLive)
+            } else {
+                result.addSource(dataSourceLive) { newData ->
+                    if (null != newData)
+                        result.value = Resource.success(newData)
+                }
+            }
         }
+
     }
 
 
@@ -70,27 +82,20 @@ protected constructor() {
      *
      * @param [dbSource] - Database source
      */
-    private fun fetchFromNetwork(dbSource: LiveData<T>) {
-        /* result.addSource(dbSource) {
-             result.setValue(Resource.loading(true))
-         }*/
+    private fun fetchFromNetwork(dbSource: LiveData<K>) {
+        result.addSource(dbSource) {
+            result.setValue(Resource.loading(true))
+        }
         createCall()?.enqueue(object : Callback<V> {
             override fun onResponse(call: Call<V>, response: Response<V>) {
-                //result.removeSource(dbSource)
+                result.removeSource(dbSource)
                 saveResultAndReInit(response.body())
             }
 
             override fun onFailure(call: Call<V>, t: Throwable) {
                 Timber.d(t)
-                /*result.removeSource(dbSource)
-                result.addSource(dbSource) { newData ->
-                    result.setValue(
-                        Resource.error(
-                            getCustomErrorMessage(t),
-                            newData
-                        )
-                    )
-                }*/
+                result.removeSource(dbSource)
+                loadOfflineData(t)
             }
         })
     }
@@ -110,10 +115,10 @@ protected constructor() {
         doAsync {
             saveCallResult(response)
             uiThread {
-                /*result.addSource(loadFromDb()) { newData ->
+                result.addSource(loadFromDb()) { newData ->
                     if (null != newData)
                         result.value = Resource.success(newData)
-                }*/
+                }
             }
         }
     }
@@ -130,7 +135,7 @@ protected constructor() {
 
     //region abstract helper methods
     @MainThread
-    protected abstract fun loadFromDb(): LiveData<T>
+    protected abstract fun loadFromDb(): MutableLiveData<K>
 
     @MainThread
     protected abstract fun provideMonarchyInstance(): Monarchy
@@ -149,7 +154,22 @@ protected constructor() {
 
     protected abstract fun provideInitialLoadKey(): Int
 
+    protected abstract fun liveDataReceiver(receiver: MutableLiveData<Resource<K>>)
+
     //endregion
+
+    private fun loadOfflineData(t: Throwable) {
+        result.addSource(loadFromDb()) { newData ->
+            if (null != newData) {
+                result.value = Resource.success(newData)
+            } else {
+                Resource.error(
+                    getCustomErrorMessage(t),
+                    newData
+                )
+            }
+        }
+    }
 
 
     /**
@@ -157,7 +177,7 @@ protected constructor() {
      *
      */
     private inner class BoundaryPaginationCallback(
-        private val networkBoundResource: NetworkPaginatedBoundResource<T, V>
+        private val networkBoundResource: NetworkPaginatedBoundResource<T, V, K>
     ) : PagedList.BoundaryCallback<T>() {
 
         /**

@@ -2,7 +2,7 @@ package com.aftabsikander.mercari.network.repository
 
 import androidx.annotation.NonNull
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PagedList
 import com.aftabsikander.mercari.network.base.NetworkBoundResource
@@ -24,7 +24,7 @@ import javax.inject.Singleton
 class CategoryRepository @Inject
 constructor(private val service: MercariService, var monarchy: Monarchy) {
 
-    private val liveDataCallbackForResource = MediatorLiveData<DisplayItem>()
+    private lateinit var liveDataReceiverForPagination: MutableLiveData<Resource<List<DisplayItem>>>
 
     fun loadCategories(): LiveData<Resource<List<CategoryModel>>> {
         return object : NetworkBoundResource<List<CategoryModel>, ArrayList<CategoryModel>>() {
@@ -52,7 +52,8 @@ constructor(private val service: MercariService, var monarchy: Monarchy) {
 
 
     fun loadCategoryData(categoryID: String): LiveData<PagedList<DisplayItem>> {
-        return object : NetworkPaginatedBoundResource<DisplayItem, ArrayList<DisplayItem>>() {
+        return object : NetworkPaginatedBoundResource<DisplayItem, ArrayList<DisplayItem>, List<DisplayItem>>() {
+
             override fun saveCallResult(item: ArrayList<DisplayItem>?) {
                 val realmInstance = Realm.getDefaultInstance()
                 realmInstance.executeTransaction { realm ->
@@ -68,8 +69,12 @@ constructor(private val service: MercariService, var monarchy: Monarchy) {
                 realmInstance.close()
             }
 
-            override fun loadFromDb(): LiveData<DisplayItem> {
-                return liveDataCallbackForResource
+            override fun loadFromDb(): MutableLiveData<List<DisplayItem>> {
+                return monarchy.findAllCopiedWithChanges { realm ->
+                    realm.where(DisplayItem::class.java).equalTo(
+                        "categoryName", categoryID, Case.INSENSITIVE
+                    )
+                } as MutableLiveData<List<DisplayItem>>
             }
 
             override fun provideMonarchyInstance(): Monarchy {
@@ -111,11 +116,14 @@ constructor(private val service: MercariService, var monarchy: Monarchy) {
                 return AppConstants.INITIAL_PAGE
             }
 
+            override fun liveDataReceiver(receiver: MutableLiveData<Resource<List<DisplayItem>>>) {
+                liveDataReceiverForPagination = receiver
+            }
         }.setupPagination()
     }
 
-    fun getDataLoadingForPaginationCallBacks(): MediatorLiveData<DisplayItem> {
-        return liveDataCallbackForResource
+    fun getDataLoadingForPaginationCallBacks(): MutableLiveData<Resource<List<DisplayItem>>> {
+        return liveDataReceiverForPagination
     }
 
     private fun generateCategoryDataEndPoint(categoryID: String): Call<ArrayList<DisplayItem>> {
