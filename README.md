@@ -87,3 +87,7 @@ There are four [build variant](https://developer.android.com/studio/build/build-
 
 
 ## TODO Improvements Task
+
+- [ ] Move to Navigation component Library after this [issues](https://issuetracker.google.com/issues/80029773#comment25) is fixed
+- [ ] Improved error screen, currently I am just showing text.
+- [ ] Pull to Refresh for Display Items. We can do this once we add Pagination API.
