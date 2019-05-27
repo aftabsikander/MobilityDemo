@@ -68,19 +68,19 @@ Dagger2 is used to externalize the creation of dependencies from the classes tha
 There are four [build variant](https://developer.android.com/studio/build/build-variants.html) configured for the App, As in real application we have many environments due to this I create following build variant to support various environments as a base.  
   
  - **Prod Build Variant:**  
-  - This build variant contains both (Debug and Release mode)  
+     - This build variant contains both (Debug and Release mode)  
      - It contains a separate code base for web service URL.  
   
  - **UAT Build Variant:**  
-  - This build variant contains both (Debug and Release mode)  
+     - This build variant contains both (Debug and Release mode)  
      - It contains a separate code base for web service URL  
      
  - **QA Build Variant:**  
-  - This build variant contains both (Debug and Release mode)  
+     - This build variant contains both (Debug and Release mode)  
      - It contains a separate code base for web service URL.  
   
  - **Dev Build Variant:**  
-  - This build variant contains both (Debug and Release mode)  
+     - This build variant contains both (Debug and Release mode)  
      - It contains a separate code base for web service URL.  
   
 <img src="/screenshots/screenshot_build_variant_support.png" alt="Build Variant"/>  
@@ -89,19 +89,19 @@ There are four [build variant](https://developer.android.com/studio/build/build-
 As we have four build variant, for generating debug/release build command varies according to product flavors.
 Open terminal and type the below command to generate debug or release build respectively
 - **Prod Build Variant:**  
-	 - `gradlew assembleProdDebug` or `./gradlew assembleProdDebug`
+     - `gradlew assembleProdDebug` or `./gradlew assembleProdDebug`
      - `gradlew assembleProdRelease` or `./gradlew assembleProdRelease`  
   
  - **UAT Build Variant:**  
-	 - `gradlew assembleUatDebug` or `./gradlew assembleUatDebug`
+     - `gradlew assembleUatDebug` or `./gradlew assembleUatDebug`
      - `gradlew assembleUatRelease` or `./gradlew assembleUatRelease`  
      
  - **QA Build Variant:**  
-	 - `gradlew assembleQaDebug` or `./gradlew assembleQaDebug`
+     - `gradlew assembleQaDebug` or `./gradlew assembleQaDebug`
      - `gradlew assembleQaRelease` or `./gradlew assembleQaRelease`  
   
  - **Dev Build Variant:**  
-	 - `gradlew assembleDevDebug` or `./gradlew assembleDevDebug`
+     - `gradlew assembleDevDebug` or `./gradlew assembleDevDebug`
      - `gradlew assembleDevRelease` or `./gradlew assembleDevRelease`  
   
 ## TODO Improvements Task  
