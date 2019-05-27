@@ -26,7 +26,7 @@ This application is build using [MVVM](https://en.wikipedia.org/wiki/Model%E2%80
  - [Glide](https://github.com/bumptech/glide) for Image loading  
  - [Timber](https://github.com/JakeWharton/timber) for Logging  
  - [Realm Monarchy](https://github.com/Zhuinden/realm-monarchy) A wrapper over Realm, that exposes RealmResults as various forms of LiveData.  
- - Fabric.io Crashlytics for crash reporting tool.  
+ - [Fabric.io](https://fabric.io) Crashlytics for crash reporting tool.  
   
 The application has been built with  **offline support**. It has been designed using  **Android Architecture components**  with  **Realm**  for offline data caching. The application is built in such a way that whenvever there is a service call, the result will be stored in local database. If internet is not available application will display data from offline storage.   
   
