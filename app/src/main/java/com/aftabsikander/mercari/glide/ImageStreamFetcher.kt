@@ -8,6 +8,14 @@ import okhttp3.*
 import java.io.IOException
 import java.io.InputStream
 
+/**
+ * Data Fetcher class which loaded image from Network.
+ *
+ * @param client [okhttp3] client instance which will be used for requested image from network.
+ * @param url URL for image which needs to be downloaded.
+ *
+ * @see DataFetcher
+ */
 class ImageStreamFetcher(private val client: Call.Factory, private val url: String) : DataFetcher<InputStream> {
     private var stream: InputStream? = null
     private var responseBody: ResponseBody? = null

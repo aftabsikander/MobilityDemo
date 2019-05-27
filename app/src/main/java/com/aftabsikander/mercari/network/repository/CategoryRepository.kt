@@ -19,15 +19,40 @@ import retrofit2.Call
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
+/**
+ * Repository class for [CategoryModel] and [DisplayItem] data source which holds all the configuration.
+ * This class is responsible for loading data and passing it as observable which can be used by anyone.
+ *
+ * @param service [MercariService] service instance.
+ * @param monarchy [Monarchy] instance for [io.realm.Realm] related operations.
+ */
 @Singleton
 class CategoryRepository @Inject
 constructor(private val service: MercariService, var monarchy: Monarchy) {
 
     private lateinit var liveDataReceiverForPagination: MutableLiveData<Resource<List<DisplayItem>>>
 
+
+    /**
+     * Load categories data from network and cache it for further usage for offline.
+     * [NetworkBoundResource] helper class is being used for encapsulating complex operations of fetching data
+     * from server or loading from cache.
+     *
+     * @return [LiveData] instance which contains [Resource] object holding [CategoryModel] collections.
+     */
     fun loadCategories(): LiveData<Resource<List<CategoryModel>>> {
         return object : NetworkBoundResource<List<CategoryModel>, ArrayList<CategoryModel>>() {
+            override fun offlineDataExist(): Boolean {
+                var dataFound = false
+                val realm = Realm.getDefaultInstance()
+                realm.executeTransaction {
+                    val dataObject = realm.where(CategoryModel::class.java).findFirst()
+                    dataFound = dataObject != null
+                }
+                realm.close()
+                return dataFound
+            }
+
             override fun saveCallResult(item: ArrayList<CategoryModel>?) {
                 val realm = Realm.getDefaultInstance()
                 realm.executeTransaction {
@@ -50,7 +75,14 @@ constructor(private val service: MercariService, var monarchy: Monarchy) {
         }.asLiveData
     }
 
-
+    /**
+     * Loads [DisplayItem] data from network and cache it for further usage for offline.
+     * [NetworkPaginatedBoundResource] helper class is being used for encapsulating complex operations of fetching data
+     * from server or loading from cache. It provides data as pagination for our [androidx.paging] library.
+     * @param categoryID Category ID
+     *
+     * @return [LiveData] instance which contains [PagedList] object holding [DisplayItem] collections.
+     */
     fun loadCategoryData(categoryID: String): LiveData<PagedList<DisplayItem>> {
         return object : NetworkPaginatedBoundResource<DisplayItem, ArrayList<DisplayItem>, List<DisplayItem>>() {
 
@@ -119,13 +151,39 @@ constructor(private val service: MercariService, var monarchy: Monarchy) {
             override fun liveDataReceiver(receiver: MutableLiveData<Resource<List<DisplayItem>>>) {
                 liveDataReceiverForPagination = receiver
             }
+
+            override fun offlineDataExist(): Boolean {
+                var dataFound = false
+                val realm = Realm.getDefaultInstance()
+                realm.executeTransaction {
+                    val dataObject = realm.where(DisplayItem::class.java).equalTo(
+                        "categoryName", categoryID, Case.INSENSITIVE
+                    ).findFirst()
+                    dataFound = dataObject != null
+                }
+                realm.close()
+                return dataFound
+            }
+
         }.setupPagination()
     }
 
+
+    /**
+     * Retrieve Pagination network callback observer which will be used on UI for further usage.
+     *
+     * @return [MutableLiveData] instance which contains [Resource] object holding [DisplayItem] collections.
+     */
     fun getDataLoadingForPaginationCallBacks(): MutableLiveData<Resource<List<DisplayItem>>> {
         return liveDataReceiverForPagination
     }
 
+    /**
+     * Extract Display Item URL from [CategoryModel] which will be used when fetching data from network.
+     * @param categoryID Category ID
+     *
+     * @return [Call] instance for [retrofit2.Retrofit] network call.
+     */
     private fun generateCategoryDataEndPoint(categoryID: String): Call<ArrayList<DisplayItem>> {
         var categoryURL = ""
         val realmInstance = Realm.getDefaultInstance()

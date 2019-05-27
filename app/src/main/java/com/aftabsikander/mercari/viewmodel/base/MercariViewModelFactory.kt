@@ -10,6 +10,10 @@ import java.util.concurrent.Callable
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
+/**
+ * [ViewModelProvider.Factory] helper class which keeps all the our [androidx.lifecycle.ViewModel] instances for future usage.
+ */
 @Singleton
 class MercariViewModelFactory @Inject
 constructor(viewModelSubComponent: ViewModelSubComponent) : ViewModelProvider.Factory {
@@ -42,6 +46,7 @@ constructor(viewModelSubComponent: ViewModelSubComponent) : ViewModelProvider.Fa
         }
 
         try {
+            @Suppress("UNCHECKED_CAST")
             return creator.call() as T
         } catch (e: Exception) {
             throw RuntimeException(e)

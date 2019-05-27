@@ -17,22 +17,39 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import timber.log.Timber
 
+/**
+ * Display Item View holder for [RecyclerView.ViewHolder] which holds all its setup and configurations.
+ *
+ * @param binding View binder instance for the layout [ItemDisplayRowBinding]
+ * @param callback [DisplayItemClickListener] instance for item click events
+ */
 class DisplayItemHolder(
     private val binding: ItemDisplayRowBinding,
     private val callback: DisplayItemClickListener
 ) : RecyclerView.ViewHolder(binding.root), ImageRequestListener.Callback {
 
     companion object {
+
+        /**
+         * Create Instance of [DisplayItemHolder] which will be used by adapter
+         * @param inflater [LayoutInflater] instance for populating layout
+         * @param parent [ViewGroup] instance from parent view.
+         * @param callback [DisplayItemClickListener] instance for item click events
+         *
+         * @return [DisplayItemHolder] instance
+         */
         fun create(
-            inflater: LayoutInflater,
-            parent: ViewGroup,
-            callback: DisplayItemClickListener
+            inflater: LayoutInflater, parent: ViewGroup, callback: DisplayItemClickListener
         ): DisplayItemHolder {
             val itemMovieListBinding = ItemDisplayRowBinding.inflate(inflater, parent, false)
             return DisplayItemHolder(itemMovieListBinding, callback)
         }
     }
 
+    /**
+     * Binds data to layout view against [DisplayItem] item.
+     * @param displayItem [DisplayItem] instance for reading values
+     */
     fun bindData(displayItem: DisplayItem?) {
         binding.displayItem = displayItem
         binding.executePendingBindings()
@@ -46,6 +63,10 @@ class DisplayItemHolder(
     }
 
 
+    /**
+     * Setup click listener events on views.
+     * @param displayItem [DisplayItem] instance
+     */
     private fun setupClickListener(displayItem: DisplayItem?) {
         binding.root.setOnClickListener {
             displayItem?.let { item -> callback.displayItemPressed(item) }
@@ -60,6 +81,12 @@ class DisplayItemHolder(
         }
     }
 
+    /**
+     * Load image from network using [Glide].
+     * @param context Calling context.
+     * @param thumbLoadUrl Thumbnail image URL for faster load.
+     * @param fullImageUrl Full image URL
+     */
     private fun loadImage(context: Context, thumbLoadUrl: String, fullImageUrl: String) {
         val requestOption = RequestOptions()
             .placeholder(R.drawable.photo_holder)
@@ -77,12 +104,21 @@ class DisplayItemHolder(
     }
 
 
+    /**
+     *  Failure event callback when fail to load image from network or cache.
+     *  @param message failure message when unable to load requested image.
+     */
     override fun onFailure(message: String?) {
         Timber.d("Fail to load: $message")
     }
 
+    /**
+     * Image load callback for successful event.
+     * @param dataSource Source from where image was loaded.
+     */
     override fun onSuccess(dataSource: String) {
         Timber.d("Loaded from: $dataSource")
     }
+
 
 }

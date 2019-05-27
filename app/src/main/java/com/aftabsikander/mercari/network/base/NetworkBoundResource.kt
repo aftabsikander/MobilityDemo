@@ -18,8 +18,13 @@ import java.io.IOException
 import java.net.SocketTimeoutException
 
 /**
- * This class act as the decider to cache the response/ fetch from the service always
+ * This class act as the decider to cache the response/ fetch from the service always.
+ * @param [T] Input Request Response
+ * @param [V] The type of the entries in the list which would be passed back as source
+ *
+ * @see [Resource]
  */
+
 abstract class NetworkBoundResource<T, V> @MainThread
 protected constructor() {
 
@@ -63,6 +68,7 @@ protected constructor() {
             }
 
             override fun onFailure(call: Call<V>, t: Throwable) {
+                call.cancel()
                 Timber.d(t)
                 result.removeSource(dbSource)
                 loadOfflineData(t)
@@ -70,6 +76,18 @@ protected constructor() {
         })
     }
 
+    /**
+     * Provide Generic error message for Network errors.
+     * @param error [Throwable] object on which error message would be generated.
+     *
+     * @return Custom error messages for network failure cases.
+     *
+     * @see [SocketTimeoutException]
+     * @see [MalformedJsonException]
+     * @see [IOException]
+     * @see [HttpException]
+     *
+     */
     private fun getCustomErrorMessage(error: Throwable): String {
         return when (error) {
             is SocketTimeoutException -> MercariApp.getInstance().getString(R.string.requestTimeOutError)
@@ -80,6 +98,11 @@ protected constructor() {
         }
     }
 
+    /***
+     * Pass result to Main thread when successful Network call is made and send result back to our main observable
+     *
+     * @param response [V] data response received from network call.
+     */
     @MainThread
     private fun saveResultAndReInit(response: V?) {
         doAsync {
@@ -93,28 +116,62 @@ protected constructor() {
         }
     }
 
-    @WorkerThread
-    protected abstract fun saveCallResult(item: V?)
 
+    /**
+     * Should network API be called for fetching latest data.
+     * @return True as we would be calling API always
+     */
     @MainThread
     private fun shouldFetch(): Boolean {
         return true
     }
 
+    //region abstract helper methods
+
+    /**
+     * Saving of network response data in our persistent storage.
+     * @param item [V] data received from network response.
+     */
+    @WorkerThread
+    protected abstract fun saveCallResult(item: V?)
+
+    /**
+     * Loading of data from DB layer as Observable database source
+     *
+     * @return [androidx.lifecycle.LiveData] data source as observable having [K] data
+     */
     @MainThread
     protected abstract fun loadFromDb(): LiveData<T>
 
-    @MainThread
-    private fun shouldShowOfflineData(): Boolean {
-        return true
-    }
 
+    /**
+     * Creates [retrofit2.Call] instance which would be used by [retrofit2.Call] for calling network request.
+     *
+     * @return [retrofit2.Call]] instance having [V] data source
+     */
     @MainThread
     protected abstract fun createCall(): Call<V>?
 
+    /**
+     * Validate does data exist in our cache
+     *
+     * @return True if data exist, otherwise false
+     */
+    @MainThread
+    protected abstract fun offlineDataExist(): Boolean
+
+    //endregion
+
+
+    /**
+     * Provide offline cached data when we receive any error from network layer,
+     * If cache layer is empty we will pass network error back to UI.
+     *
+     * @param t [Throwable] instance for parsing custom error messages.
+     */
     private fun loadOfflineData(t: Throwable) {
         result.addSource(loadFromDb()) { newData ->
-            if (null != newData) {
+            if (null != newData && offlineDataExist()) {
                 result.value = Resource.success(newData)
             } else {
                 result.setValue(

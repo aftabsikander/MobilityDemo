@@ -15,6 +15,11 @@ import dagger.android.support.HasSupportFragmentInjector
  * AppInjector is a helper class to automatically inject fragments if they implement [Injectable].
  */
 object AppInjector {
+    /**
+     * Initialization of our dependency graph for [DaggerAppComponent]
+     *
+     * @param app [MercariApp] instance
+     */
     fun init(app: MercariApp) {
         DaggerAppComponent
             .builder()
@@ -53,6 +58,9 @@ object AppInjector {
         })
     }
 
+    /**
+     * Inject Activity and Fragment in [AndroidInjection] graph for supporting Android core components.
+     */
     private fun handleActivity(activity: Activity) {
         if (activity is HasSupportFragmentInjector) {
             AndroidInjection.inject(activity)

@@ -12,6 +12,12 @@ import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * Application class which setup dagger injection and crash reporting tool.
+ * Included [MultiDexApplication] support for further development.
+ *
+ * @see [HasActivityInjector]
+ */
 class MercariApp : MultiDexApplication(), HasActivityInjector {
 
     @Inject
@@ -19,6 +25,16 @@ class MercariApp : MultiDexApplication(), HasActivityInjector {
 
     @Inject
     lateinit var appComponent: AppComponent
+
+    /**
+     * Singleton object for [MercariApp] for future references
+     */
+    companion object {
+        private lateinit var context: MercariApp
+        fun getInstance(): MercariApp {
+            return context
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -34,22 +50,29 @@ class MercariApp : MultiDexApplication(), HasActivityInjector {
         return dispatchingAndroidInjector
     }
 
-    companion object {
-        private lateinit var context: MercariApp
-        fun getInstance(): MercariApp {
-            return context
-        }
-    }
 
+    //region Setup Logging Client
+    /**
+     * Setup Logging client which we would be using in our application
+     *
+     * @see[Timber]
+     */
     private fun setupTimber() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
     }
+    //endregion
 
-    //region Helper methods for Fabric crashlytics
+    //region Setup Fabric crashlytics
+
+    /**
+     * Setup Crash reporting tool i.e [Crashlytics] We will only send release crashes to it's dashboard,
+     * all [BuildConfig.DEBUG] crashes will not be pushed.
+     *
+     * @see [Fabric]
+     */
     private fun setupFabricForCrashlytics() {
-        // Set up Crashlytics, disabled for debug builds
         val crashlyticsKit = Crashlytics.Builder()
             .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
             .build()

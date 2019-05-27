@@ -8,6 +8,11 @@ import com.bumptech.glide.signature.ObjectKey
 import okhttp3.OkHttpClient
 import java.io.InputStream
 
+/**
+ * Utility class which encapsulate the complexity for loading data stream when downloading Image from network or cache.
+ *
+ * @param client [OkHttpClient] client which will be used for downloading image from network.
+ */
 class ImageStreamLoader(private val client: OkHttpClient) : ModelLoader<ImageModel, InputStream> {
 
     class Factory(private val client: OkHttpClient) : ModelLoaderFactory<ImageModel, InputStream> {

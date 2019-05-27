@@ -26,6 +26,19 @@ object FragmentUtils {
     internal annotation class FragmentAnimation
 
 
+    /**
+     * Replace current fragment with provided on to our [androidx.fragment.app.FragmentManager]
+     *
+     * @param activity Calling [AppCompatActivity] activity
+     * @param fragment [Fragment] which needs to be pushed in fragment manager.
+     * @param id Content resource view which is used to replace the [Fragment]
+     * @param addToBackStack Add it to [androidx.fragment.app.FragmentTransaction] back stack
+     * @param animationType Animation type for pushing/replacing [Fragment]
+     *
+     * @see [FragmentAnimation]
+     * @see [androidx.fragment.app.FragmentManager]
+     * @see [androidx.fragment.app.FragmentTransaction]
+     */
     fun replaceFragment(
         activity: AppCompatActivity?,
         fragment: Fragment,

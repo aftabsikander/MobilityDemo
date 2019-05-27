@@ -1,7 +1,8 @@
 package com.aftabsikander.mercari.network
 
 /**
- * Application Base URL
+ * Constant helper class which holds all the application common constants fields for network layer
+ * for further usages in our application.
  */
 object WebLinks {
 

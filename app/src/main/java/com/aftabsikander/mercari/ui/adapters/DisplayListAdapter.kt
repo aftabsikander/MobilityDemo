@@ -9,13 +9,14 @@ import com.aftabsikander.mercari.callbacks.DisplayItemClickListener
 import com.aftabsikander.mercari.network.models.DisplayItem
 import com.aftabsikander.mercari.ui.adapters.holder.DisplayItemHolder
 
+/**
+ * Display item Adapter which holds all the setup and configure values for it's population
+ *
+ * @param itemClick [DisplayItemClickListener] display item click listener callback
+ */
 class DisplayListAdapter(
-     private val itemClick: DisplayItemClickListener
+    private val itemClick: DisplayItemClickListener
 ) : PagedListAdapter<DisplayItem, DisplayItemHolder>(displayItemDiffCallback) {
-
-    override fun getItemId(position: Int): Long {
-        return super.getItemId(position)
-    }
 
     @NonNull
     override fun onCreateViewHolder(@NonNull parent: ViewGroup, i: Int): DisplayItemHolder {

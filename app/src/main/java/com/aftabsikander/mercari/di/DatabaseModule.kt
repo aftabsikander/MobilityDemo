@@ -9,9 +9,19 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import javax.inject.Singleton
 
+/**
+ * Database layer which contains key component providers.
+ */
 @Module
 class DatabaseModule {
 
+    /**
+     * Provides [RealmConfiguration] which will be accessible across the app also this will initialize
+     * [Realm] database.
+     * @param application [Application] instance
+     *
+     * @return [RealmConfiguration] instance with our pre configuration
+     */
     @Singleton
     @Provides
     fun provideRealmConfiguration(application: Application): RealmConfiguration {
@@ -24,13 +34,28 @@ class DatabaseModule {
 
     }
 
+    /**
+     * Provides [Realm] which will be accessible across the app also this will set default configuration for our
+     * database
+     * @param config [RealmConfiguration] configuration
+     *
+     * @return [Realm] instance with our pre configuration
+     */
     @Provides
     @Singleton
-    internal fun provideRealmDatabase(config: RealmConfiguration): Realm {
+    fun provideRealmDatabase(config: RealmConfiguration): Realm {
         Realm.setDefaultConfiguration(config)
         return Realm.getDefaultInstance()
     }
 
+
+    /**
+     * Provides [Monarchy] which will be accessible across the app also this will set default configuration for our
+     * [Realm] database.
+     * @param config [RealmConfiguration] configuration
+     *
+     * @return [Monarchy] instance with our pre configuration
+     */
     @Provides
     @Singleton
     fun monarchy(config: RealmConfiguration): Monarchy {

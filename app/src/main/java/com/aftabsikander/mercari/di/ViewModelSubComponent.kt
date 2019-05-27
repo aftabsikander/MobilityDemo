@@ -6,7 +6,7 @@ import dagger.Subcomponent
 
 /**
  * A sub component to create ViewModels. It is called by the <class>
- * [com.aftabsikander.mercari.viewmodel.MercariViewModelFactory].
+ * [com.aftabsikander.mercari.viewmodel.base.MercariViewModelFactory].
  */
 @Subcomponent
 interface ViewModelSubComponent {
@@ -14,7 +14,7 @@ interface ViewModelSubComponent {
     interface Builder {
         fun build(): ViewModelSubComponent
     }
-
+    
     fun categoryListViewModel(): CategoryListViewModel
 
     fun categoryDetailViewModel(): CategoryDetailViewModel

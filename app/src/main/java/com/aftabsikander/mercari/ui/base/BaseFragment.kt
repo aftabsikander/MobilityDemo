@@ -16,6 +16,12 @@ import com.aftabsikander.mercari.utilities.extensions.setToolbarTitle
 import com.aftabsikander.mercari.utilities.extensions.showToolBar
 import javax.inject.Inject
 
+/**
+ * Abstract Base fragment class which holds common implementation for all derived fragments.
+ *
+ * @param V Instance of [ViewModel] which will be used for UI interactions
+ * @param D Instance of [ViewDataBinding] which we will use to bind our fragment to the provided layout.
+ */
 abstract class BaseFragment<V : ViewModel, D : ViewDataBinding> : Fragment(), Injectable {
 
     @Inject
@@ -25,16 +31,18 @@ abstract class BaseFragment<V : ViewModel, D : ViewDataBinding> : Fragment(), In
 
     protected lateinit var dataBinding: D
 
+    /**
+     * Get [ViewModel] instance for the fragment.
+     * @return [ViewModel] instance
+     */
     protected abstract fun getViewModel(): Class<V>
 
+    /**
+     * Get Layout resource id for inflating.
+     * @return [LayoutRes] ID
+     */
     @LayoutRes
     protected abstract fun getLayoutRes(): Int
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModel())
-    }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dataBinding = DataBindingUtil.inflate(inflater, getLayoutRes(), container, false)
@@ -46,6 +54,10 @@ abstract class BaseFragment<V : ViewModel, D : ViewDataBinding> : Fragment(), In
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(getViewModel())
     }
 
+    /**
+     * Set Toolbar title and display it on UI
+     * @param title Title which needs to be displayed.
+     */
     protected fun setToolbarText(title: String) {
         showToolBar()
         setToolbarTitle(title)
