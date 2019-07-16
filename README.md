@@ -1,9 +1,9 @@
 
   
-# Mobility App Code Setup  
+# Dynamics Mobility App Code Setup  
   
 ## Android Studio IDE  
-Version 3.4.1 of Android Studio IDE was used for developing the Mercari App   
+Version 3.4.1 of Android Studio IDE was used for developing the Mobility Dynamics App   
   
 ## Project Configurations  
   
@@ -48,7 +48,7 @@ The repository handles data interactions and transactions from two main data sou
   
 There are two main use-cases, online and offline. In both use cases,  `NetworkBoundResource` or  `NetworkPaginatedBoundResource` will always send a call to the server for fetching latest data and cache it in local database and data is displayed to the user. In case of no internet connection,  data is always queried from local storage.  
 
-<img src="/screenshots/screen_shot_data_layer.jpg" alt="Model Layer"/>  
+<img src="/screenshots/screenshot_data_layer.jpg" alt="Model Layer"/>  
   
 ### Dependency Injection  
 Dagger2 is used to externalize the creation of dependencies from the classes that use them. Android specific helpers are provided by `Dagger-Android` and the most significant advantage is that they generate a subcomponent for each `Activity` through a new code generator.  
